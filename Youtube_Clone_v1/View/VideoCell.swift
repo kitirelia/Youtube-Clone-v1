@@ -8,11 +8,24 @@
 
 import UIKit
 
-class VideoCell: UICollectionViewCell {
+class BaseCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupView()
+        setupViews()
     }
+    
+    func setupViews(){
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+class VideoCell: BaseCell {
+    
     
     let thumbnailImageView:UIImageView = {
         let imageView = UIImageView()
@@ -54,7 +67,7 @@ class VideoCell: UICollectionViewCell {
     }()
     
     
-    func setupView(){
+    override func setupViews(){
         
         addSubview(thumbnailImageView)
         addSubview(separatorView)
@@ -100,7 +113,5 @@ class VideoCell: UICollectionViewCell {
         //        addConstraintsWithFormat(format: "H:|[v0]|", views: titleLabel)
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    
 }
