@@ -9,27 +9,6 @@
 import UIKit
 
 class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLayout {
-
-//    var videos:[Video] = {
-    
-//    var kanyeChannel = Channel()
-//        kanyeChannel.name = "KayneIsTheBestChannel"
-//        kanyeChannel.profileImageName = "kayne"
-//
-//       var blankSpaceVideo = Video()
-//        blankSpaceVideo.title = "Taylor Swift - Blank Space"
-//        blankSpaceVideo.thumbnailImageName = "blank_space"
-//        blankSpaceVideo.channel = kanyeChannel
-//        blankSpaceVideo.numberOfViews = 2123049803
-//
-//        var badBloodVideo = Video()
-//        badBloodVideo.title = "Taylor Swift - Bad Blood ft. Kendrick Lamar"
-//        badBloodVideo.thumbnailImageName = "blank_space"
-//        badBloodVideo.channel = kanyeChannel
-//        badBloodVideo.numberOfViews = 1170627918
-//
-//        return [blankSpaceVideo,badBloodVideo]
-//    }()
     
     var videos:[Video]?
     
@@ -62,9 +41,9 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
                     
                     self.videos?.append(video)
                 }
-                
-                self.collectionView?.reloadData()
-                
+                DispatchQueue.main.async {
+                    self.collectionView?.reloadData()
+                }
             }catch let jsonError{
                 print(jsonError)
             }
