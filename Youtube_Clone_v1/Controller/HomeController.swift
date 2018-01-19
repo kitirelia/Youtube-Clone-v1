@@ -47,13 +47,6 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
             }catch let jsonError{
                 print(jsonError)
             }
-            
-            
-            
-            
-            
-           
-            
         }.resume()
     }
     
@@ -61,14 +54,12 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
         super.viewDidLoad()
         
         fetchVideos()
-        
         navigationItem.title = "Home"
         navigationController?.navigationBar.isTranslucent = false
         
         let titleLabel = UILabel(frame:CGRect(x: 0, y: 0, width: view.frame.width - 32, height: view.frame.height))
         titleLabel.text = "Home"
         titleLabel.textColor = UIColor.white
-//        titleLabel.font = UIFont.systemFontSize(20.0)
         navigationItem.titleView = titleLabel
         
         collectionView?.backgroundColor = UIColor.white
@@ -98,8 +89,12 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
     @objc func handleSearch(){
         print("search")
     }
+    
+    let settingLauncher = SettingLauncher()
+    
     @objc func handleMore(){
-        print("more..")
+        settingLauncher.showSettings()
+        
     }
     
     private func setupMenuBar(){
@@ -109,7 +104,6 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
         return videos?.count ?? 0
     }
     
@@ -124,8 +118,6 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
         let height = (view.frame.width - 16 - 16 ) * 9 / 16
         return CGSize(width: view.frame.width, height: (height + 16 + 88))
     }
-    
-   
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0

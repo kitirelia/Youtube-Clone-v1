@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6413B5E520109F6900841524 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6413B5E420109F6900841524 /* Video.swift */; };
+		6413B5E72011CC2100841524 /* SettingLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6413B5E62011CC2100841524 /* SettingLauncher.swift */; };
 		64847058200F02080003857B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847057200F02080003857B /* AppDelegate.swift */; };
 		6484705A200F02080003857B /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847059200F02080003857B /* HomeController.swift */; };
 		6484705D200F02080003857B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6484705B200F02080003857B /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		6413B5E420109F6900841524 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
+		6413B5E62011CC2100841524 /* SettingLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingLauncher.swift; sourceTree = "<group>"; };
 		64847054200F02080003857B /* Youtube_Clone_v1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Youtube_Clone_v1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64847057200F02080003857B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64847059200F02080003857B /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				64847059200F02080003857B /* HomeController.swift */,
+				6413B5E62011CC2100841524 /* SettingLauncher.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -180,6 +183,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6413B5E72011CC2100841524 /* SettingLauncher.swift in Sources */,
 				6484706B20105AF30003857B /* Extension.swift in Sources */,
 				6413B5E520109F6900841524 /* Video.swift in Sources */,
 				6484706E20105B7D0003857B /* VideoCell.swift in Sources */,
