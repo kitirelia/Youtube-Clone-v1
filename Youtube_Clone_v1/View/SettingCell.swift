@@ -48,7 +48,6 @@ class SettingCell: BaseCell {
         
         addConstraintsWithFormat(format: "H:|-8-[v0(30)]-8-[v1]|", views: iconImageView,nameLabel)
         
-        
         addConstraintsWithFormat(format: "V:|[v0]|", views: nameLabel)
         
         addConstraintsWithFormat(format: "V:[v0(30)]", views: iconImageView)

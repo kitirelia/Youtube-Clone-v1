@@ -37,12 +37,16 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
        return [Setting(name: "Settings", imageName: "setting2"),Setting(name: "Terms & privacy policy", imageName: "privacy"),Setting(name: "Send Feedback", imageName: "feedback"),Setting(name: "Help", imageName: "help"),Setting(name: "Switch Account", imageName: "switch_account"),Setting(name: "Cancel", imageName: "cancel")]
     }()
     
+    var homeController:HomeController?
+    
     func showSettings(){
         
         if let window = UIApplication.shared.keyWindow{
             
             blackView.backgroundColor = UIColor(white: 0, alpha: 0.5)
-            blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
+            //blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector((handleDismiss))))
+            blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss(setting:))))
+            
             
             window.addSubview(blackView)
             window.addSubview(collectionView)
@@ -63,11 +67,24 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
         }
     }
     
-    @objc func handleDismiss(){
-        UIView.animate(withDuration: 0.35) {
+    @objc func handleDismiss(setting:Setting){
+        print("check settint \(setting)")
+//        UIView.animate(withDuration: 0.35) {
+//            self.blackView.alpha = 0
+//            if let window = UIApplication.shared.keyWindow{
+//                self.collectionView.frame = CGRect(x: 0, y: window.frame.height, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+//            }
+//        }
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.blackView.alpha = 0
             if let window = UIApplication.shared.keyWindow{
                 self.collectionView.frame = CGRect(x: 0, y: window.frame.height, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+            }
+        }) { (completed:Bool) in
+            //let setting = self.settings[indexPath.item]
+            
+            if setting.name != "" && setting.name != "Cancel" {
+                self.homeController?.showControllerForSettings(setting: setting)
             }
         }
     }
@@ -93,6 +110,24 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0 
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let setting = self.settings[indexPath.item]
+        handleDismiss(setting:setting)
+        
+//        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+//            self.blackView.alpha = 0
+//            if let window = UIApplication.shared.keyWindow{
+//                self.collectionView.frame = CGRect(x: 0, y: window.frame.height, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+//            }
+//        }) { (completed:Bool) in
+//            let setting = self.settings[indexPath.item]
+//
+//            if setting.name != "Cancel"{
+//                 self.homeController?.showControllerForSettings(setting: setting)
+//            }
+//        }
     }
     
     
