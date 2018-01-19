@@ -70,16 +70,16 @@ class VideoCell: BaseCell {
         }
     }
     
-    let thumbnailImageView:UIImageView = {
-        let imageView = UIImageView()
+    let thumbnailImageView:CustomImageView = {
+        let imageView = CustomImageView()
         imageView.image = UIImage(named: "blank_space")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
     
-    let userProfileImageView:UIImageView = {
-        let imageView = UIImageView()
+    let userProfileImageView:CustomImageView = {
+        let imageView = CustomImageView()
         imageView.image = UIImage(named:"taylor_profile")
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 22
