@@ -29,12 +29,8 @@ class VideoCell: BaseCell {
     var video:Video? {
         didSet{
             titleLabel.text = video?.title
-            thumbnailImageView.image = UIImage(named:(video?.thumbnailImageName)!)
-            
-            if let profileImageName  = video?.channel?.profileImageName{
-                userProfileImageView.image = UIImage(named:profileImageName)
-                
-            }
+            setupThumbnailImage()
+            setupProfileImage()
             
             if let channelName = video?.channel?.name, let numberOfView =  video?.numberOfViews {
                 
@@ -58,6 +54,19 @@ class VideoCell: BaseCell {
             }
            
             
+        }
+    }
+    
+    
+    func setupProfileImage(){
+        if let profileImageUrl =  video?.channel?.profileImageName{
+            userProfileImageView.loadImageUsingUrlString(urlString: profileImageUrl)
+        }
+    }
+    
+    func setupThumbnailImage(){
+        if let thumbnailImageUrl =  video?.thumbnailImageName{
+            thumbnailImageView.loadImageUsingUrlString(urlString: thumbnailImageUrl)
         }
     }
     
