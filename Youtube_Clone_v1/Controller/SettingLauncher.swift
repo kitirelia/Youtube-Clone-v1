@@ -45,7 +45,7 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
             
             blackView.backgroundColor = UIColor(white: 0, alpha: 0.5)
             //blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector((handleDismiss))))
-            blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss(setting:))))
+            blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapBlackView)))
             
             
             window.addSubview(blackView)
@@ -75,6 +75,9 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
 //                self.collectionView.frame = CGRect(x: 0, y: window.frame.height, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
 //            }
 //        }
+        
+        
+        
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.blackView.alpha = 0
             if let window = UIApplication.shared.keyWindow{
@@ -86,6 +89,17 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
             if setting.name != "" && setting.name != "Cancel" {
                 self.homeController?.showControllerForSettings(setting: setting)
             }
+        }
+    }
+    
+    @objc func tapBlackView(){
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.blackView.alpha = 0
+            if let window = UIApplication.shared.keyWindow{
+                self.collectionView.frame = CGRect(x: 0, y: window.frame.height, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+            }
+        }) { (completed:Bool) in
+            
         }
     }
     
