@@ -59,7 +59,6 @@ class MenuBar: UIView,UICollectionViewDataSource,UICollectionViewDelegate,UIColl
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         homeController?.scrollToMenuIndex(menuIndex: indexPath.item)
-        
     }
 
     
