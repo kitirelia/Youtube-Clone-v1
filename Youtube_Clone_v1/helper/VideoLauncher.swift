@@ -29,8 +29,6 @@ class VideoPlayerView: UIView {
         return button
     }()
     
-
-    
     var playerLayer:AVPlayerLayer?
     let controlsContainerView:UIView = {
        let view = UIView()
@@ -57,9 +55,18 @@ class VideoPlayerView: UIView {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "00:00"
-//        label.backgroundColor = UIColor.lightGray
         label.font = UIFont.boldSystemFont(ofSize: 12)
         label.textAlignment = .right
+        label.textColor = UIColor.white
+        return label
+    }()
+    
+    let currentTimerLabel:UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "00:00"
+        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.textAlignment = .left
         label.textColor = UIColor.white
         return label
     }()
@@ -69,7 +76,6 @@ class VideoPlayerView: UIView {
         slider.minimumTrackTintColor = UIColor.red
         slider.maximumTrackTintColor = UIColor.white
         slider.translatesAutoresizingMaskIntoConstraints = false
-       // let thumbImg = UIImage(named: "thumb_seek")
         slider.setThumbImage(UIImage(named:"red_circle_"), for: .normal)
         slider.addTarget(self, action: #selector(handleSliderChange), for: .valueChanged)
         return slider
@@ -88,13 +94,13 @@ class VideoPlayerView: UIView {
             })
         }
         
-        
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         setupPlayerView()
+        setupGradientLayer()
         
         controlsContainerView.frame = frame
         addSubview(controlsContainerView)
@@ -115,10 +121,17 @@ class VideoPlayerView: UIView {
         videoLenghtLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
         videoLenghtLabel.heightAnchor.constraint(equalToConstant: 22).isActive = true
         
+        
+        controlsContainerView.addSubview(currentTimerLabel)
+        currentTimerLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 4).isActive = true
+        currentTimerLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+        currentTimerLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        currentTimerLabel.heightAnchor.constraint(equalToConstant: 22).isActive = true
+        
         controlsContainerView.addSubview(videoSlider)
         videoSlider.rightAnchor.constraint(equalTo: videoLenghtLabel.leftAnchor).isActive = true
         videoSlider.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        videoSlider.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        videoSlider.leftAnchor.constraint(equalTo: currentTimerLabel.rightAnchor, constant: 0).isActive = true
         videoSlider.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         backgroundColor = UIColor.black
@@ -134,6 +147,22 @@ class VideoPlayerView: UIView {
             self.layer.frame = self.frame
             player?.play()
             player?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
+            
+            let interval = CMTime(value: 1, timescale: 2)
+            player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
+                
+                let seconds = CMTimeGetSeconds(progressTime)
+                
+                let secondsString = String(format: "%02d", Int(seconds) % 60)
+                let minutesString = String(format: "%02d", Int(seconds) / 60)
+                self.currentTimerLabel.text = "\(minutesString):\(secondsString)"
+                
+                if let duration = self.player?.currentItem?.duration{
+                    let durationSection = CMTimeGetSeconds(duration)
+                    
+                    self.videoSlider.value = Float(seconds / durationSection)
+                }
+            })
         }
     }
     
@@ -157,6 +186,16 @@ class VideoPlayerView: UIView {
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
         playerLayer?.frame = self.bounds
+    }
+    
+    
+    private func setupGradientLayer(){
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = bounds
+        gradientLayer.colors = [UIColor.clear.cgColor,UIColor.black.cgColor]
+        gradientLayer.locations = [0.7,1.2]
+        
+        controlsContainerView.layer.addSublayer(gradientLayer)
     }
     
     required init?(coder aDecoder: NSCoder) {
