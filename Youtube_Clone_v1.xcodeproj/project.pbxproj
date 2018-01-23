@@ -15,10 +15,10 @@
 		6413B5F02015C96F00841524 /* TrendingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6413B5EF2015C96F00841524 /* TrendingCell.swift */; };
 		6413B5F22015CDC700841524 /* SubscriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6413B5F12015CDC700841524 /* SubscriptionCell.swift */; };
 		6413B5F42016D5A300841524 /* VideoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6413B5F32016D5A300841524 /* VideoLauncher.swift */; };
+		6413B5F62016F5D900841524 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6413B5F52016F5D900841524 /* Media.xcassets */; };
 		64847058200F02080003857B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847057200F02080003857B /* AppDelegate.swift */; };
 		6484705A200F02080003857B /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847059200F02080003857B /* HomeController.swift */; };
 		6484705D200F02080003857B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6484705B200F02080003857B /* Main.storyboard */; };
-		6484705F200F02080003857B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6484705E200F02080003857B /* Assets.xcassets */; };
 		64847062200F02080003857B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64847060200F02080003857B /* LaunchScreen.storyboard */; };
 		6484706B20105AF30003857B /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6484706A20105AF30003857B /* Extension.swift */; };
 		6484706E20105B7D0003857B /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6484706D20105B7D0003857B /* VideoCell.swift */; };
@@ -34,11 +34,11 @@
 		6413B5EF2015C96F00841524 /* TrendingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendingCell.swift; sourceTree = "<group>"; };
 		6413B5F12015CDC700841524 /* SubscriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionCell.swift; sourceTree = "<group>"; };
 		6413B5F32016D5A300841524 /* VideoLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLauncher.swift; sourceTree = "<group>"; };
+		6413B5F52016F5D900841524 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		64847054200F02080003857B /* Youtube_Clone_v1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Youtube_Clone_v1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64847057200F02080003857B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64847059200F02080003857B /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		6484705C200F02080003857B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		6484705E200F02080003857B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		64847061200F02080003857B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		64847063200F02080003857B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6484706A20105AF30003857B /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -99,9 +99,9 @@
 				6484706F20105BA80003857B /* Controller */,
 				64847057200F02080003857B /* AppDelegate.swift */,
 				6484705B200F02080003857B /* Main.storyboard */,
-				6484705E200F02080003857B /* Assets.xcassets */,
 				64847060200F02080003857B /* LaunchScreen.storyboard */,
 				64847063200F02080003857B /* Info.plist */,
+				6413B5F52016F5D900841524 /* Media.xcassets */,
 			);
 			path = Youtube_Clone_v1;
 			sourceTree = "<group>";
@@ -197,7 +197,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				64847062200F02080003857B /* LaunchScreen.storyboard in Resources */,
-				6484705F200F02080003857B /* Assets.xcassets in Resources */,
+				6413B5F62016F5D900841524 /* Media.xcassets in Resources */,
 				6484705D200F02080003857B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
