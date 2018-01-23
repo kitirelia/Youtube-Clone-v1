@@ -148,8 +148,6 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
             return cell
        
-        
-       
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
