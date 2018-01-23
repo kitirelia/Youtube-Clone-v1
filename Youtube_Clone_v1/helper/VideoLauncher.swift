@@ -11,20 +11,90 @@ import AVFoundation
 
 class VideoPlayerView: UIView {
     
+    let activityIndicationView:UIActivityIndicatorView = {
+        let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        aiv.translatesAutoresizingMaskIntoConstraints = false
+        aiv.startAnimating()
+        return aiv
+    }()
+    
+    lazy var pausePlayButton:UIButton = {
+        let button = UIButton(type: UIButtonType.system)
+        let image = UIImage(named: "pause_24")
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor.white
+        button.isHidden = true
+        button.addTarget(self, action: #selector(handlePause), for: .touchUpInside)
+        return button
+    }()
+    
+
+    
     var playerLayer:AVPlayerLayer?
+    let controlsContainerView:UIView = {
+       let view = UIView()
+        view.backgroundColor = UIColor(white: 0, alpha: 1)
+        return view
+    }()
+    
+    var player:AVPlayer?
+    var isPlaying = false
+    
+    @objc func handlePause(){
+        if isPlaying{
+            player?.pause()
+            pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
+        }else{
+            player?.play()
+            pausePlayButton.setImage(UIImage(named:"pause_24"), for: .normal)
+        }
+        
+        isPlaying = !isPlaying
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        setupPlayerView()
+        
+        controlsContainerView.frame = frame
+        addSubview(controlsContainerView)
+        
+        controlsContainerView.addSubview(activityIndicationView)
+        activityIndicationView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        activityIndicationView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        
+        controlsContainerView.addSubview(pausePlayButton)
+        pausePlayButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        pausePlayButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        pausePlayButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        pausePlayButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
         backgroundColor = UIColor.black
         
+       
+    }
+    
+    private func setupPlayerView(){
         let urlString = "https://aure.cc/youtube-clone/video/my_year.mp4"
         if let url = URL(string: urlString){
-            let player = AVPlayer(url: url)
+            player = AVPlayer(url: url)
             
             playerLayer = AVPlayerLayer(player: player)
             self.layer.addSublayer(playerLayer!)
             self.layer.frame = self.frame
-            player.play()
+            player?.play()
+            player?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
+        }
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "currentItem.loadedTimeRanges"{
+            activityIndicationView.stopAnimating()
+            controlsContainerView.backgroundColor = UIColor.clear
+            pausePlayButton.isHidden = false
+            isPlaying = true
         }
     }
     
