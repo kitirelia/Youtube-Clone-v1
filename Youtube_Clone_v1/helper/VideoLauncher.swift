@@ -34,6 +34,7 @@ class VideoPlayerView: UIView {
         let image = UIImage(named:"minimize")
         button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(handleMinimize), for: .touchUpInside)
         button.tintColor = UIColor.white
         return button
     }()
@@ -96,6 +97,14 @@ class VideoPlayerView: UIView {
         isPlaying = !isPlaying
     }
     
+    @objc func handleMinimize(){
+        minimizeView()
+    }
+    
+    func minimizeView(){
+
+    }
+    
     let videoLenghtLabel:UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -120,7 +129,6 @@ class VideoPlayerView: UIView {
         let slider = UISlider()
         slider.minimumTrackTintColor = UIColor.red
         slider.maximumTrackTintColor = UIColor.rgb(red: 102, green: 102, blue: 102)
-       
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.setThumbImage(UIImage(named:"red_circle_"), for: .normal)
         slider.addTarget(self, action: #selector(handleSliderChange), for: .valueChanged)
@@ -264,6 +272,8 @@ class VideoPlayerView: UIView {
     }
     
     
+    
+    
     private func setupGradientLayer(){
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
@@ -277,12 +287,35 @@ class VideoPlayerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    
 }
 
 class VideoLauncher:NSObject{
     
+//    func minimizeView(){
+//        if let keyWindow = UIApplication.shared.keyWindow{
+//            let view = UIView(frame: keyWindow.frame)
+//            view.backgroundColor = UIColor.white
+//
+//            view.frame = CGRect(x: keyWindow.frame.width - 10, y: keyWindow.frame.height - 10, width: 10, height: 10)
+//
+//            let height = keyWindow.frame.width * 9 / 16
+//            let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
+//            let videoPlayerView = VideoPlayerView(frame: videoPlayerFrame)
+//            view.addSubview(videoPlayerView)
+//
+//            keyWindow.addSubview(view)
+//
+//            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+//                view.frame = keyWindow.frame
+//            }, completion: { (completedAnimation) in
+//                UIApplication.shared.isStatusBarHidden = true
+//            })
+//        }
+//    }
+    
     func showVideoPlayer(){
-        print("Show video player animation....")
         
         if let keyWindow = UIApplication.shared.keyWindow{
             let view = UIView(frame: keyWindow.frame)
