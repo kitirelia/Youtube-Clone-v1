@@ -119,7 +119,8 @@ class VideoPlayerView: UIView {
     lazy var videoSlider:UISlider = {
         let slider = UISlider()
         slider.minimumTrackTintColor = UIColor.red
-        slider.maximumTrackTintColor = UIColor.white
+        slider.maximumTrackTintColor = UIColor.rgb(red: 102, green: 102, blue: 102)
+       
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.setThumbImage(UIImage(named:"red_circle_"), for: .normal)
         slider.addTarget(self, action: #selector(handleSliderChange), for: .valueChanged)
@@ -184,35 +185,29 @@ class VideoPlayerView: UIView {
         controlsContainerView.addConstraintsWithFormat(format: "H:[v0(25)]", views: watchLaterButton)
         controlsContainerView.addConstraintsWithFormat(format: "V:[v0(20)]", views: watchLaterButton)
         
-        
         controlsContainerView.addSubview(fullScrennButton)
         fullScrennButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
         fullScrennButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
-        controlsContainerView.addConstraintsWithFormat(format: "H:[v0(20)]", views: fullScrennButton)
-        controlsContainerView.addConstraintsWithFormat(format: "V:[v0(20)]", views: fullScrennButton)
-        
-        
-        
-        
-        
+        controlsContainerView.addConstraintsWithFormat(format: "H:[v0(15)]", views: fullScrennButton)
+        controlsContainerView.addConstraintsWithFormat(format: "V:[v0(14)]", views: fullScrennButton)
+    
         controlsContainerView.addSubview(videoLenghtLabel)
-        videoLenghtLabel.rightAnchor.constraint(equalTo: rightAnchor,constant: -4).isActive = true
-        videoLenghtLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+         videoLenghtLabel.rightAnchor.constraint(equalTo: fullScrennButton.leftAnchor,constant: -15).isActive = true
+        videoLenghtLabel.centerYAnchor.constraint(equalTo: fullScrennButton.centerYAnchor).isActive = true
         videoLenghtLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
         videoLenghtLabel.heightAnchor.constraint(equalToConstant: 22).isActive = true
         
         
         controlsContainerView.addSubview(currentTimerLabel)
-        currentTimerLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 4).isActive = true
-        currentTimerLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+        currentTimerLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        currentTimerLabel.centerYAnchor.constraint(equalTo: fullScrennButton.centerYAnchor, constant: 0).isActive = true
         currentTimerLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
         currentTimerLabel.heightAnchor.constraint(equalToConstant: 22).isActive = true
         
         controlsContainerView.addSubview(videoSlider)
-        videoSlider.rightAnchor.constraint(equalTo: videoLenghtLabel.leftAnchor).isActive = true
-        videoSlider.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        videoSlider.leftAnchor.constraint(equalTo: currentTimerLabel.rightAnchor, constant: 0).isActive = true
-        videoSlider.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        controlsContainerView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: videoSlider)
+
+        addConstraint(NSLayoutConstraint(item: videoSlider, attribute: .centerY, relatedBy: .equal, toItem: controlsContainerView, attribute: .centerY, multiplier: 1, constant: (frame.height/2) ))
         
         backgroundColor = UIColor.black
     }

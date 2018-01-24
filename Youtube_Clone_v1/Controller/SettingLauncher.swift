@@ -88,8 +88,7 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
                 self.collectionView.frame = CGRect(x: 0, y: window.frame.height, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
             }
         }) { (completed:Bool) in
-            //let setting = self.settings[indexPath.item]
-            
+   
             if setting.name != .Cancel  {
                 self.homeController?.showControllerForSettings(setting: setting)
             }
