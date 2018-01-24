@@ -29,6 +29,51 @@ class VideoPlayerView: UIView {
         return button
     }()
     
+    let minimizeButton:UIButton = {
+        let button = UIButton(type: UIButtonType.system)
+        let image = UIImage(named:"minimize")
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor.white
+        return button
+    }()
+    
+    let settingsButton:UIButton = {
+        let button = UIButton(type: UIButtonType.system)
+        let image = UIImage(named:"three_dots")
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor.white
+        return button
+    }()
+    
+    let shareButton:UIButton = {
+        let button = UIButton(type: UIButtonType.system)
+        let image = UIImage(named:"share_media")
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor.white
+        return button
+    }()
+    
+    let watchLaterButton:UIButton = {
+        let button = UIButton(type: UIButtonType.system)
+        let image = UIImage(named:"watch_later")
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor.white
+        return button
+    }()
+    
+    let fullScrennButton:UIButton = {
+        let button = UIButton(type: UIButtonType.system)
+        let image = UIImage(named:"full_screen")
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor.white
+        return button
+    }()
+    
     var playerLayer:AVPlayerLayer?
     let controlsContainerView:UIView = {
        let view = UIView()
@@ -114,6 +159,41 @@ class VideoPlayerView: UIView {
         pausePlayButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         pausePlayButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         pausePlayButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        controlsContainerView.addSubview(minimizeButton)
+        minimizeButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 15).isActive = true
+        minimizeButton.topAnchor.constraint(equalTo: topAnchor, constant: 22).isActive = true
+        controlsContainerView.addConstraintsWithFormat(format: "H:[v0(19)]", views: minimizeButton)
+        controlsContainerView.addConstraintsWithFormat(format: "V:[v0(10)]", views: minimizeButton)
+        
+        controlsContainerView.addSubview(settingsButton)
+        settingsButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
+        settingsButton.topAnchor.constraint(equalTo: minimizeButton.topAnchor, constant: 0).isActive = true
+        controlsContainerView.addConstraintsWithFormat(format: "H:[v0(6)]", views: settingsButton)
+        controlsContainerView.addConstraintsWithFormat(format: "V:[v0(20)]", views: settingsButton)
+        
+        controlsContainerView.addSubview(shareButton)
+        shareButton.rightAnchor.constraint(equalTo: settingsButton.leftAnchor, constant: -30).isActive = true
+        shareButton.topAnchor.constraint(equalTo: minimizeButton.topAnchor, constant: 0).isActive = true
+        controlsContainerView.addConstraintsWithFormat(format: "H:[v0(25)]", views: shareButton)
+        controlsContainerView.addConstraintsWithFormat(format: "V:[v0(20)]", views: shareButton)
+        
+        controlsContainerView.addSubview(watchLaterButton)
+        watchLaterButton.rightAnchor.constraint(equalTo: shareButton.leftAnchor, constant: -30).isActive = true
+        watchLaterButton.topAnchor.constraint(equalTo: minimizeButton.topAnchor, constant: 0).isActive = true
+        controlsContainerView.addConstraintsWithFormat(format: "H:[v0(25)]", views: watchLaterButton)
+        controlsContainerView.addConstraintsWithFormat(format: "V:[v0(20)]", views: watchLaterButton)
+        
+        
+        controlsContainerView.addSubview(fullScrennButton)
+        fullScrennButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+        fullScrennButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
+        controlsContainerView.addConstraintsWithFormat(format: "H:[v0(20)]", views: fullScrennButton)
+        controlsContainerView.addConstraintsWithFormat(format: "V:[v0(20)]", views: fullScrennButton)
+        
+        
+        
+        
         
         controlsContainerView.addSubview(videoLenghtLabel)
         videoLenghtLabel.rightAnchor.constraint(equalTo: rightAnchor,constant: -4).isActive = true
