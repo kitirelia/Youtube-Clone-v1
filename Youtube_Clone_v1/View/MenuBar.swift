@@ -20,7 +20,7 @@ class MenuBar: UIView,UICollectionViewDataSource,UICollectionViewDelegate,UIColl
     }()
     
     let cellId = "cellId"
-    let imageNames = ["home","trending","subscription","account"]
+    let imageNames = ["y_home_icon","y_trending_icon","y_subcription_icon","y_activity_icon"]
     
     var homeController:HomeController?
     

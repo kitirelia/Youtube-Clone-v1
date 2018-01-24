@@ -58,7 +58,7 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
         let searchImage = UIImage(named:"search_icon_2")?.withRenderingMode(.alwaysOriginal)
         let searchBarButtonItem = UIBarButtonItem(image: searchImage, style: .plain, target: self, action: #selector(handleSearch))
         
-        let moreButton = UIBarButtonItem(image: UIImage(named:"nav_more_icon_2")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMore))
+        let moreButton = UIBarButtonItem(image: UIImage(named:"three_dots_small")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMore))
         
         navigationItem.rightBarButtonItems = [moreButton,searchBarButtonItem]
     }
