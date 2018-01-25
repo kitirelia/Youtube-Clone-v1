@@ -56,7 +56,6 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
         if let window = UIApplication.shared.keyWindow{
             
             blackView.backgroundColor = UIColor(white: 0, alpha: 0.5)
-            //blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector((handleDismiss))))
             blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapBlackView)))
             
             
@@ -80,7 +79,7 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
     }
     
     @objc func handleDismiss(setting:Setting){
-        print("check settint \(setting)")
+      ///  print("check settint \(setting)")
 
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.blackView.alpha = 0
