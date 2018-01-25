@@ -306,29 +306,25 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate{
     
     func minimizeView(){
         if let keyWindow = UIApplication.shared.keyWindow{
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            UIView.animate(withDuration: 1.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 let minFrameWidth = (keyWindow.frame.width * 9 / 16) * 0.2
                 let minFrameHeight = (keyWindow.frame.height * 9 / 16) * 0.2
-                
                 let frameY = keyWindow.frame.height - (keyWindow.frame.width * 9 / 16)
-                
                 self.blackView.frame = CGRect(x: 0, y: frameY, width: minFrameWidth, height: minFrameHeight)
-                
             }) { (completed:Bool) in
                 
+                self.blackView.alpha = 0.5
                 
             }
         }
     }
     
-    
     func showVideoPlayer(){
         
+        print("show player 111")
         if let keyWindow = UIApplication.shared.keyWindow{
-    
             blackView.backgroundColor = UIColor.white
             blackView.frame = CGRect(x: keyWindow.frame.width - 50, y: keyWindow.frame.height - 50, width: 50, height: 50)
-            
             let height = keyWindow.frame.width * 9 / 16
             let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
             let videoPlayerView = VideoPlayerView(frame: videoPlayerFrame)
@@ -344,39 +340,55 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate{
             })
         }
     }
+    
+    override init() {
+        super.init()
+        print("init Video Launcher 000")
+    }
+}
+
+//class VideoLauncher:NSObject,VideoPlayerViewDelegate{
+//    func minimizeButtonDidTapped() {
+//        minimizeView()
+//    }
+//
+//
+//    let blackView = UIView()
+//
+//    func minimizeView(){
+//        if let keyWindow = UIApplication.shared.keyWindow{
+//            UIView.animate(withDuration: 1.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+//                let minFrameWidth = (keyWindow.frame.width * 9 / 16) * 0.2
+//                let minFrameHeight = (keyWindow.frame.height * 9 / 16) * 0.2
+//                let frameY = keyWindow.frame.height - (keyWindow.frame.width * 9 / 16)
+//                self.blackView.frame = CGRect(x: 0, y: frameY, width: minFrameWidth, height: minFrameHeight)
+//            }) { (completed:Bool) in
+//
+//                self.blackView.alpha = 0.5
+//
+//            }
+//        }
+//    }
+//
 //    func showVideoPlayer(){
 //
 //        if let keyWindow = UIApplication.shared.keyWindow{
-//            let view = UIView(frame: keyWindow.frame)
-//            view.backgroundColor = UIColor.white
-//
-//            view.frame = CGRect(x: keyWindow.frame.width - 10, y: keyWindow.frame.height - 10, width: 10, height: 10)
-//
-//
+//            blackView.backgroundColor = UIColor.white
+//            blackView.frame = CGRect(x: keyWindow.frame.width - 50, y: keyWindow.frame.height - 50, width: 50, height: 50)
 //            let height = keyWindow.frame.width * 9 / 16
 //            let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
 //            let videoPlayerView = VideoPlayerView(frame: videoPlayerFrame)
-//            view.addSubview(videoPlayerView)
+//            blackView.addSubview(videoPlayerView)
 //            videoPlayerView.videoDelegate = self
 //
-//            keyWindow.addSubview(view)
+//            keyWindow.addSubview(blackView)
 //
 //            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-//                view.frame = keyWindow.frame
+//                self.blackView.frame = keyWindow.frame
 //            }, completion: { (completedAnimation) in
 //                UIApplication.shared.isStatusBarHidden = true
 //            })
 //        }
 //    }
-    
-}
-
-//extension VideoLauncher:VideoPlayerViewDelegate{
-//    func minimizeButtonDidTapped() {
-//        print("DELEGATE")
-//        minimizeView()
-//    }
-//
-//
 //}
 

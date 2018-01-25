@@ -50,9 +50,7 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
     }()
     
     var homeController:HomeController?
-    
     func showSettings(){
-        
         if let window = UIApplication.shared.keyWindow{
             
             blackView.backgroundColor = UIColor(white: 0, alpha: 0.5)
@@ -79,8 +77,7 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
     }
     
     @objc func handleDismiss(setting:Setting){
-      ///  print("check settint \(setting)")
-
+    
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.blackView.alpha = 0
             if let window = UIApplication.shared.keyWindow{
@@ -136,6 +133,8 @@ class SettingLauncher: NSObject,UICollectionViewDataSource,UICollectionViewDeleg
     
     override init() {
         super.init()
+        
+//        print("_____ init setting")
         
         collectionView.delegate = self
         collectionView.dataSource = self
