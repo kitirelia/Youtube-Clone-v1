@@ -8,8 +8,7 @@
 
 import UIKit
 
-class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLayout {
-    
+class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLayout,FeedCellDelegate {
     
     let cellId = "cellId"
     let trendingCellId = "trendingId"
@@ -18,9 +17,7 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         navigationController?.navigationBar.isTranslucent = false
-        
         let titleLabel = UILabel(frame:CGRect(x: 0, y: 0, width: view.frame.width - 32, height: view.frame.height))
         titleLabel.text = "  Home"
         titleLabel.textColor = UIColor.white
@@ -29,11 +26,9 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
         setupCollectionView()
         setupMenuBar()
         setupNavBarButtons()
-        
     }
     
     func setupCollectionView(){
-        
         if let flowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout{
             flowLayout.scrollDirection = .horizontal
             flowLayout.minimumLineSpacing = 0
@@ -57,15 +52,17 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
     private func setupNavBarButtons(){
         let searchImage = UIImage(named:"search_icon_2")?.withRenderingMode(.alwaysOriginal)
         let searchBarButtonItem = UIBarButtonItem(image: searchImage, style: .plain, target: self, action: #selector(handleSearch))
-        
         let moreButton = UIBarButtonItem(image: UIImage(named:"three_dots_small")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMore))
-        
         navigationItem.rightBarButtonItems = [moreButton,searchBarButtonItem]
     }
     
     @objc func handleSearch(){
         print("search")
+        //videoLauncher.showVideoPlayer()
     }
+    
+    
+    
     
     func scrollToMenuIndex(menuIndex:Int){
         let indexPath = IndexPath(item: menuIndex, section: 0)
@@ -80,17 +77,23 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
         return launcher
     }()
     
+    lazy var videoLauncher:VideoLauncher = {
+       let launcher = VideoLauncher()
+        
+        return launcher
+    }()
+    
     @objc func handleMore(){
         settingLauncher.showSettings()
     }
     
     func showControllerForSettings(setting:Setting){
-        let dummySettingViewController = UIViewController()
-        dummySettingViewController.view.backgroundColor = UIColor.white
-        dummySettingViewController.navigationItem.title = setting.name.rawValue
-        navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
-        navigationController?.pushViewController(dummySettingViewController, animated: true)
+//        let dummySettingViewController = UIViewController()
+//        dummySettingViewController.view.backgroundColor = UIColor.white
+//        dummySettingViewController.navigationItem.title = setting.name.rawValue
+//        navigationController?.navigationBar.tintColor = UIColor.white
+//        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
+//        navigationController?.pushViewController(dummySettingViewController, animated: true)
     }
     
     func setTitleForIndex(index:Int){
@@ -145,14 +148,24 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
             identifier = cellId
         }
        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as? FeedCell{
+        cell.feedCellDelegate = self
+            
             return cell
-       
+        }else{
+            return UICollectionViewCell()
+        }
     }
-
+    
+    func feedCellTapped(url: String) {
+        videoLauncher.showVideoPlayer(withUrl: url)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: view.frame.height - 50)
     }
+    
+  
 
 }
 

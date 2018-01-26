@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol FeedCellDelegate:class{
+    func feedCellTapped(url:String)
+}
+
 class FeedCell: BaseCell,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout {
     
     lazy var collectionView : UICollectionView = {
@@ -21,6 +25,11 @@ class FeedCell: BaseCell,UICollectionViewDataSource,UICollectionViewDelegate,UIC
     
     var videos:[Video]?
     
+   var videoUrl:String = "https://aure.cc/youtube-clone/video/hyperlapse_new_york.mp4"
+//    var lightsaberColor = "Blue"
+    
+    var feedCellDelegate:FeedCellDelegate?
+    
     let cellId = "cellId"
     
     func fetchVideos(){
@@ -29,6 +38,12 @@ class FeedCell: BaseCell,UICollectionViewDataSource,UICollectionViewDelegate,UIC
             self.collectionView.reloadData()
         }
     }
+    
+    func setVideoPath(url:String){
+        videoUrl = url
+    }
+    
+    
     
     override func setupViews() {
         super.setupViews()
@@ -60,9 +75,7 @@ class FeedCell: BaseCell,UICollectionViewDataSource,UICollectionViewDelegate,UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let videoLauncher = VideoLauncher()
-        videoLauncher.showVideoPlayer()
-        
+        feedCellDelegate?.feedCellTapped(url:videoUrl)
     }
     
 }

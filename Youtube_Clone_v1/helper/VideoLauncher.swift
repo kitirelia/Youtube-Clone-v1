@@ -17,6 +17,11 @@ protocol VideoPlayerViewDelegate{
 class VideoPlayerView: UIView {
     
     var videoDelegate:VideoPlayerViewDelegate?
+    var playUrl:String?
+    var player:AVPlayer?
+    var quPlayer:AVQueuePlayer?
+    var isPlaying = false
+    var playerLayer:AVPlayerLayer?
     
     let activityIndicationView:UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -82,15 +87,14 @@ class VideoPlayerView: UIView {
         return button
     }()
     
-    var playerLayer:AVPlayerLayer?
+    
     let controlsContainerView:UIView = {
        let view = UIView()
         view.backgroundColor = UIColor(white: 0, alpha: 1)
         return view
     }()
     
-    var player:AVPlayer?
-    var isPlaying = false
+    
     
     @objc func handlePause(){
         if isPlaying{
@@ -105,10 +109,9 @@ class VideoPlayerView: UIView {
     }
     
     @objc func handleMinimize(){
+        print("Fonnd tap minimize")
         videoDelegate?.minimizeButtonDidTapped()
     }
-    
-  
     
     let videoLenghtLabel:UILabel = {
        let label = UILabel()
@@ -144,21 +147,21 @@ class VideoPlayerView: UIView {
         
         if let duration = player?.currentItem?.duration{
             let totalSeconds = CMTimeGetSeconds(duration)
-            
             let value = Float64(videoSlider.value) * totalSeconds
-            
             let seekTime = CMTime(value: CMTimeValue(value), timescale: 1)
             player?.seek(to: seekTime, completionHandler: { (completeSeek) in
                 
             })
         }
-        
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setupPlayerView()
+      quPlayer = AVQueuePlayer.init()
+        playerLayer = AVPlayerLayer(player: quPlayer)
+        self.layer.addSublayer(playerLayer!)
+        self.layer.frame = self.frame
         setupGradientLayer()
         
         controlsContainerView.frame = frame
@@ -225,29 +228,24 @@ class VideoPlayerView: UIView {
         backgroundColor = UIColor.black
     }
     
-    private func setupPlayerView(){
-        let urlString = "https://aure.cc/youtube-clone/video/my_year.mp4"
-        if let url = URL(string: urlString){
-            player = AVPlayer(url: url)
-            
-            playerLayer = AVPlayerLayer(player: player)
-            self.layer.addSublayer(playerLayer!)
-            self.layer.frame = self.frame
-            player?.play()
-            player?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
-            
+    func playVideoWithUrl(videoUrl:String){
+        if let url = URL(string: videoUrl){
+            quPlayer?.removeAllItems()
+            let playerItem = AVPlayerItem.init(url: url)
+            quPlayer?.insert(playerItem, after: nil)
+            quPlayer?.play()
+            quPlayer?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
+
             let interval = CMTime(value: 1, timescale: 2)
-            player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
-                
+            quPlayer?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
+
                 let seconds = CMTimeGetSeconds(progressTime)
-                
                 let secondsString = String(format: "%02d", Int(seconds) % 60)
                 let minutesString = String(format: "%02d", Int(seconds) / 60)
                 self.currentTimerLabel.text = "\(minutesString):\(secondsString)"
-                
                 if let duration = self.player?.currentItem?.duration{
                     let durationSection = CMTimeGetSeconds(duration)
-                    
+
                     self.videoSlider.value = Float(seconds / durationSection)
                 }
             })
@@ -300,9 +298,23 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate{
     func minimizeButtonDidTapped() {
         minimizeView()
     }
-    
-    
     let blackView = UIView()
+
+    lazy var videoPlayerView:VideoPlayerView = {
+       let vid = VideoPlayerView()
+        vid.videoDelegate = self
+        print("NEW VideoPlayerView!!!!\n\n")
+        return vid
+    }()
+    
+    override init(){
+        super.init()
+        blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blackViewTap)))
+    }
+    
+    @objc func blackViewTap(){
+        minimizeView()
+    }
     
     func minimizeView(){
         if let keyWindow = UIApplication.shared.keyWindow{
@@ -313,82 +325,39 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate{
                 self.blackView.frame = CGRect(x: 0, y: frameY, width: minFrameWidth, height: minFrameHeight)
             }) { (completed:Bool) in
                 
-                self.blackView.alpha = 0.5
+                self.blackView.alpha = 1
                 
             }
         }
     }
     
-    func showVideoPlayer(){
-        
-        print("show player 111")
+    
+    func showVideoPlayer(withUrl url:String){
+        //print("play this url \(url)")
         if let keyWindow = UIApplication.shared.keyWindow{
             blackView.backgroundColor = UIColor.white
             blackView.frame = CGRect(x: keyWindow.frame.width - 50, y: keyWindow.frame.height - 50, width: 50, height: 50)
             let height = keyWindow.frame.width * 9 / 16
             let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
-            let videoPlayerView = VideoPlayerView(frame: videoPlayerFrame)
+            videoPlayerView.frame = videoPlayerFrame
+            videoPlayerView.playUrl = url
             blackView.addSubview(videoPlayerView)
-            videoPlayerView.videoDelegate = self
             
             keyWindow.addSubview(blackView)
             
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 self.blackView.frame = keyWindow.frame
             }, completion: { (completedAnimation) in
+               // self.videoPlayerView.updateVideoPath(videoUrl: url)
+                self.videoPlayerView.playVideoWithUrl(videoUrl: url)
                 UIApplication.shared.isStatusBarHidden = true
             })
         }
     }
     
-    override init() {
-        super.init()
-        print("init Video Launcher 000")
+    @objc func handleTap(){
+        //print("Parent Tap")
+        minimizeView()
     }
+    
 }
-
-//class VideoLauncher:NSObject,VideoPlayerViewDelegate{
-//    func minimizeButtonDidTapped() {
-//        minimizeView()
-//    }
-//
-//
-//    let blackView = UIView()
-//
-//    func minimizeView(){
-//        if let keyWindow = UIApplication.shared.keyWindow{
-//            UIView.animate(withDuration: 1.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-//                let minFrameWidth = (keyWindow.frame.width * 9 / 16) * 0.2
-//                let minFrameHeight = (keyWindow.frame.height * 9 / 16) * 0.2
-//                let frameY = keyWindow.frame.height - (keyWindow.frame.width * 9 / 16)
-//                self.blackView.frame = CGRect(x: 0, y: frameY, width: minFrameWidth, height: minFrameHeight)
-//            }) { (completed:Bool) in
-//
-//                self.blackView.alpha = 0.5
-//
-//            }
-//        }
-//    }
-//
-//    func showVideoPlayer(){
-//
-//        if let keyWindow = UIApplication.shared.keyWindow{
-//            blackView.backgroundColor = UIColor.white
-//            blackView.frame = CGRect(x: keyWindow.frame.width - 50, y: keyWindow.frame.height - 50, width: 50, height: 50)
-//            let height = keyWindow.frame.width * 9 / 16
-//            let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
-//            let videoPlayerView = VideoPlayerView(frame: videoPlayerFrame)
-//            blackView.addSubview(videoPlayerView)
-//            videoPlayerView.videoDelegate = self
-//
-//            keyWindow.addSubview(blackView)
-//
-//            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-//                self.blackView.frame = keyWindow.frame
-//            }, completion: { (completedAnimation) in
-//                UIApplication.shared.isStatusBarHidden = true
-//            })
-//        }
-//    }
-//}
-
