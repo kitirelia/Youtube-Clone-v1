@@ -18,7 +18,7 @@ class VideoPlayerView: UIView {
     
     var videoDelegate:VideoPlayerViewDelegate?
     var playUrl:String?
-    var player:AVPlayer?
+//    var player:AVPlayer?
     var quPlayer:AVQueuePlayer?
     var isPlaying = false
     var playerLayer:AVPlayerLayer?
@@ -97,11 +97,12 @@ class VideoPlayerView: UIView {
     
     
     @objc func handlePause(){
+        print("pause video")
         if isPlaying{
-            player?.pause()
+            quPlayer?.pause()
             pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
         }else{
-            player?.play()
+            quPlayer?.play()
             pausePlayButton.setImage(UIImage(named:"pause_24"), for: .normal)
         }
         
@@ -145,87 +146,121 @@ class VideoPlayerView: UIView {
     
     @objc func handleSliderChange(){
         
-        if let duration = player?.currentItem?.duration{
+        if let duration = quPlayer?.currentItem?.duration{
             let totalSeconds = CMTimeGetSeconds(duration)
             let value = Float64(videoSlider.value) * totalSeconds
             let seekTime = CMTime(value: CMTimeValue(value), timescale: 1)
-            player?.seek(to: seekTime, completionHandler: { (completeSeek) in
+            quPlayer?.seek(to: seekTime, completionHandler: { (completeSeek) in
                 
             })
         }
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-      quPlayer = AVQueuePlayer.init()
+    func setupVideoPlayer(){
+        quPlayer = AVQueuePlayer.init()
         playerLayer = AVPlayerLayer(player: quPlayer)
         self.layer.addSublayer(playerLayer!)
         self.layer.frame = self.frame
-        setupGradientLayer()
+        
+
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        
+        print("init VideoPlayerView get frame \(frame)")
         
         controlsContainerView.frame = frame
         addSubview(controlsContainerView)
+        setupGradientLayer()
+        //bringSubview(toFront: controlsContainerView)
+        setupVideoPlayer()
+        let greenView = UIView()
+        greenView.backgroundColor = UIColor.green
+        greenView.frame = frame
+        greenView.translatesAutoresizingMaskIntoConstraints = false
+        controlsContainerView.addSubview(greenView)
+        controlsContainerView.addConstraintsWithFormat(format:"H:|-[v0]-|", views: greenView)
+        controlsContainerView.addConstraintsWithFormat(format:"V:|-[v0]-|", views: greenView)
+       
         
         controlsContainerView.addSubview(activityIndicationView)
         activityIndicationView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         activityIndicationView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        
+//
         controlsContainerView.addSubview(pausePlayButton)
         pausePlayButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         pausePlayButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         pausePlayButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         pausePlayButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
+
         controlsContainerView.addSubview(minimizeButton)
         minimizeButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 15).isActive = true
         minimizeButton.topAnchor.constraint(equalTo: topAnchor, constant: 22).isActive = true
         controlsContainerView.addConstraintsWithFormat(format: "H:[v0(19)]", views: minimizeButton)
         controlsContainerView.addConstraintsWithFormat(format: "V:[v0(10)]", views: minimizeButton)
-        
+        print("CHECK \(minimizeButton.isUserInteractionEnabled)")
+
         controlsContainerView.addSubview(settingsButton)
         settingsButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
         settingsButton.topAnchor.constraint(equalTo: minimizeButton.topAnchor, constant: 0).isActive = true
         controlsContainerView.addConstraintsWithFormat(format: "H:[v0(6)]", views: settingsButton)
         controlsContainerView.addConstraintsWithFormat(format: "V:[v0(20)]", views: settingsButton)
-        
+
         controlsContainerView.addSubview(shareButton)
         shareButton.rightAnchor.constraint(equalTo: settingsButton.leftAnchor, constant: -30).isActive = true
         shareButton.topAnchor.constraint(equalTo: minimizeButton.topAnchor, constant: 0).isActive = true
         controlsContainerView.addConstraintsWithFormat(format: "H:[v0(25)]", views: shareButton)
         controlsContainerView.addConstraintsWithFormat(format: "V:[v0(20)]", views: shareButton)
-        
+
         controlsContainerView.addSubview(watchLaterButton)
         watchLaterButton.rightAnchor.constraint(equalTo: shareButton.leftAnchor, constant: -30).isActive = true
         watchLaterButton.topAnchor.constraint(equalTo: minimizeButton.topAnchor, constant: 0).isActive = true
         controlsContainerView.addConstraintsWithFormat(format: "H:[v0(25)]", views: watchLaterButton)
         controlsContainerView.addConstraintsWithFormat(format: "V:[v0(20)]", views: watchLaterButton)
-        
+
         controlsContainerView.addSubview(fullScrennButton)
         fullScrennButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
         fullScrennButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
         controlsContainerView.addConstraintsWithFormat(format: "H:[v0(15)]", views: fullScrennButton)
         controlsContainerView.addConstraintsWithFormat(format: "V:[v0(14)]", views: fullScrennButton)
-    
+//
         controlsContainerView.addSubview(videoLenghtLabel)
-         videoLenghtLabel.rightAnchor.constraint(equalTo: fullScrennButton.leftAnchor,constant: -15).isActive = true
+        videoLenghtLabel.rightAnchor.constraint(equalTo: fullScrennButton.leftAnchor,constant: -15).isActive = true
         videoLenghtLabel.centerYAnchor.constraint(equalTo: fullScrennButton.centerYAnchor).isActive = true
         videoLenghtLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
         videoLenghtLabel.heightAnchor.constraint(equalToConstant: 22).isActive = true
-        
-        
+
+
         controlsContainerView.addSubview(currentTimerLabel)
         currentTimerLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         currentTimerLabel.centerYAnchor.constraint(equalTo: fullScrennButton.centerYAnchor, constant: 0).isActive = true
         currentTimerLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
         currentTimerLabel.heightAnchor.constraint(equalToConstant: 22).isActive = true
-        
+
         controlsContainerView.addSubview(videoSlider)
         controlsContainerView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: videoSlider)
 
         addConstraint(NSLayoutConstraint(item: videoSlider, attribute: .centerY, relatedBy: .equal, toItem: controlsContainerView, attribute: .centerY, multiplier: 1, constant: (frame.height/2) ))
         
-        backgroundColor = UIColor.black
+        backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+       quPlayer?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
+        
+        let interval = CMTime(value: 1, timescale: 2)
+        quPlayer?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
+            
+            let seconds = CMTimeGetSeconds(progressTime)
+            let secondsString = String(format: "%02d", Int(seconds) % 60)
+            let minutesString = String(format: "%02d", Int(seconds) / 60)
+            self.currentTimerLabel.text = "\(minutesString):\(secondsString)"
+            if let duration = self.quPlayer?.currentItem?.duration{
+                let durationSection = CMTimeGetSeconds(duration)
+                
+                self.videoSlider.value = Float(seconds / durationSection)
+            }
+        })
+
     }
     
     func playVideoWithUrl(videoUrl:String){
@@ -234,21 +269,7 @@ class VideoPlayerView: UIView {
             let playerItem = AVPlayerItem.init(url: url)
             quPlayer?.insert(playerItem, after: nil)
             quPlayer?.play()
-            quPlayer?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
 
-            let interval = CMTime(value: 1, timescale: 2)
-            quPlayer?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
-
-                let seconds = CMTimeGetSeconds(progressTime)
-                let secondsString = String(format: "%02d", Int(seconds) % 60)
-                let minutesString = String(format: "%02d", Int(seconds) / 60)
-                self.currentTimerLabel.text = "\(minutesString):\(secondsString)"
-                if let duration = self.player?.currentItem?.duration{
-                    let durationSection = CMTimeGetSeconds(duration)
-
-                    self.videoSlider.value = Float(seconds / durationSection)
-                }
-            })
         }
     }
     
@@ -259,12 +280,12 @@ class VideoPlayerView: UIView {
             pausePlayButton.isHidden = false
             isPlaying = true
             
-            if let duration = player?.currentItem?.duration{
-                let seconds = CMTimeGetSeconds(duration)
-                let secondsText = String(format: "%02d", Int(seconds) % 60)
-                let minutesText = String(format: "%02d", Int(seconds) / 60)
+            if let duration = quPlayer?.currentItem?.duration{
+//                let seconds = CMTimeGetSeconds(duration)
+//                let secondsText = String(format: "%02d", Int(seconds) % 60)
+//                let minutesText = String(format: "%02d", Int(seconds) / 60)
                
-                videoLenghtLabel.text = "\(minutesText):\(secondsText)"
+//                videoLenghtLabel.text = "\(minutesText):\(secondsText)"
             }
         }
     }
@@ -274,13 +295,11 @@ class VideoPlayerView: UIView {
         playerLayer?.frame = self.bounds
     }
     
-    
-    
-    
     private func setupGradientLayer(){
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
         gradientLayer.colors = [UIColor.clear.cgColor,UIColor.black.cgColor]
+//        gradientLayer.colors = [UIColor.red.cgColor,UIColor.green.cgColor]
         gradientLayer.locations = [0.7,1.2]
         
         controlsContainerView.layer.addSublayer(gradientLayer)
@@ -298,22 +317,25 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate{
     func minimizeButtonDidTapped() {
         minimizeView()
     }
-    let blackView = UIView()
-
+    let blackView:UIView = UIView()
+  
     lazy var videoPlayerView:VideoPlayerView = {
        let vid = VideoPlayerView()
+        vid.frame = blackView.frame
         vid.videoDelegate = self
-        print("NEW VideoPlayerView!!!!\n\n")
         return vid
     }()
     
     override init(){
         super.init()
-        blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blackViewTap)))
+        
+       
+        videoPlayerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blackViewTap)))
     }
     
     @objc func blackViewTap(){
         minimizeView()
+        //print("video view tap")
     }
     
     func minimizeView(){
@@ -331,7 +353,6 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate{
         }
     }
     
-    
     func showVideoPlayer(withUrl url:String){
         //print("play this url \(url)")
         if let keyWindow = UIApplication.shared.keyWindow{
@@ -348,16 +369,10 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate{
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 self.blackView.frame = keyWindow.frame
             }, completion: { (completedAnimation) in
-               // self.videoPlayerView.updateVideoPath(videoUrl: url)
                 self.videoPlayerView.playVideoWithUrl(videoUrl: url)
                 UIApplication.shared.isStatusBarHidden = true
             })
         }
-    }
-    
-    @objc func handleTap(){
-        //print("Parent Tap")
-        minimizeView()
     }
     
 }
