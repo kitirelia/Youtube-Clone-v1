@@ -18,7 +18,6 @@ class VideoPlayerView: UIView {
     
     var videoDelegate:VideoPlayerViewDelegate?
     var playUrl:String?
-//    var player:AVPlayer?
     var quPlayer:AVQueuePlayer?
     var isPlaying = false
     var playerLayer:AVPlayerLayer?
@@ -94,10 +93,7 @@ class VideoPlayerView: UIView {
         return view
     }()
     
-    
-    
     @objc func handlePause(){
-        print("pause video")
         if isPlaying{
             quPlayer?.pause()
             pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
@@ -156,39 +152,19 @@ class VideoPlayerView: UIView {
         }
     }
     
-    func setupVideoPlayer(){
-        quPlayer = AVQueuePlayer.init()
-        playerLayer = AVPlayerLayer(player: quPlayer)
-        self.layer.addSublayer(playerLayer!)
-        self.layer.frame = self.frame
-        
-
-    }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        
-        print(" ___ __ init VideoPlayerView get frame \(frame)")
-        
+     
+        setupVideoPlayer()
+
+        setupGradientLayer()
         controlsContainerView.frame = frame
         addSubview(controlsContainerView)
-        setupGradientLayer()
-        //bringSubview(toFront: controlsContainerView)
-        setupVideoPlayer()
-        let greenView = UIView()
-        greenView.backgroundColor = UIColor.green
-        greenView.frame = frame
-        greenView.translatesAutoresizingMaskIntoConstraints = false
-        controlsContainerView.addSubview(greenView)
-        controlsContainerView.addConstraintsWithFormat(format:"H:|-[v0]-|", views: greenView)
-        controlsContainerView.addConstraintsWithFormat(format:"V:|-[v0]-|", views: greenView)
-       
         
         controlsContainerView.addSubview(activityIndicationView)
         activityIndicationView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         activityIndicationView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-//
+
         controlsContainerView.addSubview(pausePlayButton)
         pausePlayButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         pausePlayButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
@@ -201,7 +177,6 @@ class VideoPlayerView: UIView {
         controlsContainerView.addConstraintsWithFormat(format: "H:[v0(19)]", views: minimizeButton)
         controlsContainerView.addConstraintsWithFormat(format: "V:[v0(10)]", views: minimizeButton)
        
-
         controlsContainerView.addSubview(settingsButton)
         settingsButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
         settingsButton.topAnchor.constraint(equalTo: minimizeButton.topAnchor, constant: 0).isActive = true
@@ -225,7 +200,7 @@ class VideoPlayerView: UIView {
         fullScrennButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
         controlsContainerView.addConstraintsWithFormat(format: "H:[v0(15)]", views: fullScrennButton)
         controlsContainerView.addConstraintsWithFormat(format: "V:[v0(14)]", views: fullScrennButton)
-//
+
         controlsContainerView.addSubview(videoLenghtLabel)
         videoLenghtLabel.rightAnchor.constraint(equalTo: fullScrennButton.leftAnchor,constant: -15).isActive = true
         videoLenghtLabel.centerYAnchor.constraint(equalTo: fullScrennButton.centerYAnchor).isActive = true
@@ -242,16 +217,12 @@ class VideoPlayerView: UIView {
         controlsContainerView.addSubview(videoSlider)
         controlsContainerView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: videoSlider)
         
-        print("  *** init set \(frame)")
-
         addConstraint(NSLayoutConstraint(item: videoSlider, attribute: .centerY, relatedBy: .equal, toItem: controlsContainerView, attribute: .centerY, multiplier: 1, constant: (frame.height/2) ))
-        
         backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-       quPlayer?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
+        quPlayer?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
         
         let interval = CMTime(value: 1, timescale: 2)
         quPlayer?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
-            
             let seconds = CMTimeGetSeconds(progressTime)
             let secondsString = String(format: "%02d", Int(seconds) % 60)
             let minutesString = String(format: "%02d", Int(seconds) / 60)
@@ -262,25 +233,44 @@ class VideoPlayerView: UIView {
                 self.videoSlider.value = Float(seconds / durationSection)
             }
         })
+    }
 
-    }
-    
-//    override func updateConstraints() {
-//        print(" 11111 update constrain here")
-//    }
-    
-    func debugSize(){
-        print("debug frame  ->  \(frame)")
-    }
-    
     func playVideoWithUrl(videoUrl:String){
-//        if let url = URL(string: videoUrl){
-//            quPlayer?.removeAllItems()
-//            let playerItem = AVPlayerItem.init(url: url)
-//            quPlayer?.insert(playerItem, after: nil)
-//            quPlayer?.play()
-//
-//        }
+        if let url = URL(string: videoUrl){
+            quPlayer?.pause()
+            let asset = AVAsset(url: url)
+            quPlayer?.removeAllItems()
+            let playerItem = AVPlayerItem(asset: asset)
+            quPlayer?.insert(playerItem, after: nil)
+            quPlayer?.play()
+            
+            let seconds = CMTimeGetSeconds(asset.duration)
+            let secondsString = String(format: "%02d", Int(seconds) % 60)
+            let minutesString = String(format: "%02d", Int(seconds) / 60)
+            videoLenghtLabel.text = "\(minutesString):\(secondsString)"
+        }
+    }
+    
+    @objc func playerItemDidReachEnd(notification: Notification)
+    {
+        print("Video Finish \(notification)")
+    }
+    
+    @objc func readVideoStatus(notification: Notification){
+         print("Read status -> \(notification)")
+    }
+    
+    func setupVideoPlayer(){
+        quPlayer = AVQueuePlayer.init()
+        playerLayer = AVPlayerLayer(player: quPlayer)
+        self.layer.addSublayer(playerLayer!)
+        self.layer.frame = self.frame
+        
+        let selector = #selector(playerItemDidReachEnd(notification:))
+        let name = NSNotification.Name.AVPlayerItemDidPlayToEndTime
+        NotificationCenter.default.addObserver(self, selector: selector, name: name, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(readVideoStatus(notification:)), name: Notification.Name.AVAssetDurationDidChange, object: nil)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -290,13 +280,6 @@ class VideoPlayerView: UIView {
             pausePlayButton.isHidden = false
             isPlaying = true
             
-            if let duration = quPlayer?.currentItem?.duration{
-//                let seconds = CMTimeGetSeconds(duration)
-//                let secondsText = String(format: "%02d", Int(seconds) % 60)
-//                let minutesText = String(format: "%02d", Int(seconds) / 60)
-               
-//                videoLenghtLabel.text = "\(minutesText):\(secondsText)"
-            }
         }
     }
     
@@ -309,7 +292,6 @@ class VideoPlayerView: UIView {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
         gradientLayer.colors = [UIColor.clear.cgColor,UIColor.black.cgColor]
-//        gradientLayer.colors = [UIColor.red.cgColor,UIColor.green.cgColor]
         gradientLayer.locations = [0.7,1.2]
         
         controlsContainerView.layer.addSublayer(gradientLayer)
@@ -318,51 +300,40 @@ class VideoPlayerView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
-    
 }
+
+
 
 class VideoLauncher:NSObject,VideoPlayerViewDelegate{
     func minimizeButtonDidTapped() {
         minimizeView()
     }
     let blackView:UIView = UIView()
-    lazy var videoPlayerView:VideoPlayerView = {
-       let vid = VideoPlayerView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
-        
-        vid.videoDelegate = self
-        return vid
-    }()
+
+    var videoPlayerView:VideoPlayerView!
     
     override init(){
         super.init()
-        print("__ init VideoLauncher")
        if let keyWindow = UIApplication.shared.keyWindow{
-        print("check key winodw \(keyWindow.frame)")
-//        videoPlayerView.frame = keyWindow.frame
-        blackView.backgroundColor = UIColor.white
-        blackView.frame = CGRect(x: keyWindow.frame.width - 50, y: keyWindow.frame.height - 50, width: 50, height: 50)
-        let height = keyWindow.frame.width * 9 / 16
-        let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
-        videoPlayerView.frame = videoPlayerFrame
-        blackView.addSubview(videoPlayerView)
-        
-        keyWindow.addSubview(blackView)
+            blackView.backgroundColor = UIColor.white
+            blackView.frame = CGRect(x: keyWindow.frame.width - 50, y: keyWindow.frame.height - 50, width: 50, height: 50)
+            let height = keyWindow.frame.width * 9 / 16
+            let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
+            videoPlayerView = VideoPlayerView(frame: CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height))
+            videoPlayerView.videoDelegate = self
+            videoPlayerView.frame = videoPlayerFrame
+            blackView.addSubview(videoPlayerView)
+            keyWindow.addSubview(blackView)
         }
-        
-        
-       // videoPlayerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blackViewTap)))
     }
     
     @objc func blackViewTap(){
         minimizeView()
-        //print("video view tap")
     }
     
     func minimizeView(){
         if let keyWindow = UIApplication.shared.keyWindow{
-            UIView.animate(withDuration: 1.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 let minFrameWidth = (keyWindow.frame.width * 9 / 16) * 0.2
                 let minFrameHeight = (keyWindow.frame.height * 9 / 16) * 0.2
                 let frameY = keyWindow.frame.height - (keyWindow.frame.width * 9 / 16)
@@ -370,32 +341,21 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate{
             }) { (completed:Bool) in
                 
                 self.blackView.alpha = 1
-                
             }
         }
     }
     
     func showVideoPlayer(withUrl url:String){
         if let keyWindow = UIApplication.shared.keyWindow{
-//            blackView.backgroundColor = UIColor.white
-//            blackView.frame = CGRect(x: keyWindow.frame.width - 50, y: keyWindow.frame.height - 50, width: 50, height: 50)
-//            let height = keyWindow.frame.width * 9 / 16
-//            let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
-//            videoPlayerView.frame = videoPlayerFrame
             videoPlayerView.playUrl = url
-//            blackView.addSubview(videoPlayerView)
-//
-//            keyWindow.addSubview(blackView)
-            
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 self.blackView.frame = keyWindow.frame
             }, completion: { (completedAnimation) in
                 self.videoPlayerView.playVideoWithUrl(videoUrl: url)
                 UIApplication.shared.isStatusBarHidden = true
-                self.videoPlayerView.debugSize()
+                
                 self.videoPlayerView.layoutIfNeeded()
-                print("-- after refresh layout ")
-                self.videoPlayerView.debugSize()
+                
             })
         }
     }
