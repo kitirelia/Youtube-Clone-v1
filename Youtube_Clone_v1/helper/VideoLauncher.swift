@@ -169,7 +169,7 @@ class VideoPlayerView: UIView {
         super.init(frame: frame)
         
         
-        print("init VideoPlayerView get frame \(frame)")
+        print(" ___ __ init VideoPlayerView get frame \(frame)")
         
         controlsContainerView.frame = frame
         addSubview(controlsContainerView)
@@ -200,7 +200,7 @@ class VideoPlayerView: UIView {
         minimizeButton.topAnchor.constraint(equalTo: topAnchor, constant: 22).isActive = true
         controlsContainerView.addConstraintsWithFormat(format: "H:[v0(19)]", views: minimizeButton)
         controlsContainerView.addConstraintsWithFormat(format: "V:[v0(10)]", views: minimizeButton)
-        print("CHECK \(minimizeButton.isUserInteractionEnabled)")
+       
 
         controlsContainerView.addSubview(settingsButton)
         settingsButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
@@ -241,6 +241,8 @@ class VideoPlayerView: UIView {
 
         controlsContainerView.addSubview(videoSlider)
         controlsContainerView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: videoSlider)
+        
+        print("  *** init set \(frame)")
 
         addConstraint(NSLayoutConstraint(item: videoSlider, attribute: .centerY, relatedBy: .equal, toItem: controlsContainerView, attribute: .centerY, multiplier: 1, constant: (frame.height/2) ))
         
@@ -263,14 +265,22 @@ class VideoPlayerView: UIView {
 
     }
     
+//    override func updateConstraints() {
+//        print(" 11111 update constrain here")
+//    }
+    
+    func debugSize(){
+        print("debug frame  ->  \(frame)")
+    }
+    
     func playVideoWithUrl(videoUrl:String){
-        if let url = URL(string: videoUrl){
-            quPlayer?.removeAllItems()
-            let playerItem = AVPlayerItem.init(url: url)
-            quPlayer?.insert(playerItem, after: nil)
-            quPlayer?.play()
-
-        }
+//        if let url = URL(string: videoUrl){
+//            quPlayer?.removeAllItems()
+//            let playerItem = AVPlayerItem.init(url: url)
+//            quPlayer?.insert(playerItem, after: nil)
+//            quPlayer?.play()
+//
+//        }
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -318,19 +328,31 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate{
         minimizeView()
     }
     let blackView:UIView = UIView()
-  
     lazy var videoPlayerView:VideoPlayerView = {
-       let vid = VideoPlayerView()
-        vid.frame = blackView.frame
+       let vid = VideoPlayerView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
+        
         vid.videoDelegate = self
         return vid
     }()
     
     override init(){
         super.init()
+        print("__ init VideoLauncher")
+       if let keyWindow = UIApplication.shared.keyWindow{
+        print("check key winodw \(keyWindow.frame)")
+//        videoPlayerView.frame = keyWindow.frame
+        blackView.backgroundColor = UIColor.white
+        blackView.frame = CGRect(x: keyWindow.frame.width - 50, y: keyWindow.frame.height - 50, width: 50, height: 50)
+        let height = keyWindow.frame.width * 9 / 16
+        let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
+        videoPlayerView.frame = videoPlayerFrame
+        blackView.addSubview(videoPlayerView)
         
-       
-        videoPlayerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blackViewTap)))
+        keyWindow.addSubview(blackView)
+        }
+        
+        
+       // videoPlayerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blackViewTap)))
     }
     
     @objc func blackViewTap(){
@@ -354,23 +376,26 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate{
     }
     
     func showVideoPlayer(withUrl url:String){
-        //print("play this url \(url)")
         if let keyWindow = UIApplication.shared.keyWindow{
-            blackView.backgroundColor = UIColor.white
-            blackView.frame = CGRect(x: keyWindow.frame.width - 50, y: keyWindow.frame.height - 50, width: 50, height: 50)
-            let height = keyWindow.frame.width * 9 / 16
-            let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
-            videoPlayerView.frame = videoPlayerFrame
+//            blackView.backgroundColor = UIColor.white
+//            blackView.frame = CGRect(x: keyWindow.frame.width - 50, y: keyWindow.frame.height - 50, width: 50, height: 50)
+//            let height = keyWindow.frame.width * 9 / 16
+//            let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
+//            videoPlayerView.frame = videoPlayerFrame
             videoPlayerView.playUrl = url
-            blackView.addSubview(videoPlayerView)
-            
-            keyWindow.addSubview(blackView)
+//            blackView.addSubview(videoPlayerView)
+//
+//            keyWindow.addSubview(blackView)
             
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 self.blackView.frame = keyWindow.frame
             }, completion: { (completedAnimation) in
                 self.videoPlayerView.playVideoWithUrl(videoUrl: url)
                 UIApplication.shared.isStatusBarHidden = true
+                self.videoPlayerView.debugSize()
+                self.videoPlayerView.layoutIfNeeded()
+                print("-- after refresh layout ")
+                self.videoPlayerView.debugSize()
             })
         }
     }

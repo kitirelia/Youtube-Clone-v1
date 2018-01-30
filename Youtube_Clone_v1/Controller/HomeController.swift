@@ -58,7 +58,7 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
     
     @objc func handleSearch(){
         print("search")
-        //videoLauncher.showVideoPlayer()
+        
     }
     
     
@@ -158,6 +158,7 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
     }
     
     func feedCellTapped(url: String) {
+        print("call from feed cell")
         videoLauncher.showVideoPlayer(withUrl: url)
     }
     
