@@ -22,6 +22,11 @@ class VideoPlayerView: UIView {
     var isPlaying = false
     var playerLayer:AVPlayerLayer?
     
+    // smooth
+    var isSeekInProgress = false
+    var chaseTime = kCMTimeZero
+    var playerCurrentItemStatus:AVPlayerItemStatus = .unknown
+    
     let activityIndicationView:UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         aiv.translatesAutoresizingMaskIntoConstraints = false
@@ -143,14 +148,20 @@ class VideoPlayerView: UIView {
     @objc func handleSliderChange(){
         
         if let duration = quPlayer?.currentItem?.duration{
+            //print("seek to duration \(duration)")
+            //stopPlayingAndSeekSmoothlyToTime(newChaseTime: duration)
             let totalSeconds = CMTimeGetSeconds(duration)
             let value = Float64(videoSlider.value) * totalSeconds
             let seekTime = CMTime(value: CMTimeValue(value), timescale: 1)
             quPlayer?.seek(to: seekTime, completionHandler: { (completeSeek) in
-                
+
             })
         }
     }
+    
+    
+    
+    //-------------------------------
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -257,7 +268,7 @@ class VideoPlayerView: UIView {
     }
     
     @objc func readVideoStatus(notification: Notification){
-         print("Read status -> \(notification)")
+//         print("AVPlayerItemTimeJumped -> \(notification)")
     }
     
     func setupVideoPlayer(){
@@ -270,7 +281,7 @@ class VideoPlayerView: UIView {
         let name = NSNotification.Name.AVPlayerItemDidPlayToEndTime
         NotificationCenter.default.addObserver(self, selector: selector, name: name, object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(readVideoStatus(notification:)), name: Notification.Name.AVAssetDurationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(readVideoStatus(notification:)), name: Notification.Name.AVPlayerItemTimeJumped, object: nil)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
