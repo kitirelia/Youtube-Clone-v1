@@ -12,8 +12,7 @@ import AVFoundation
 
 protocol VideoPlayerViewDelegate{
     func minimizeButtonDidTapped()
-    func thumbnailGenerated(thumbImage:UIImage?)
-    
+    func renderingVideoToBitmap(bitmapData:UIImage)
 }
 
 class VideoPlayerView: UIView {
@@ -66,6 +65,7 @@ class VideoPlayerView: UIView {
         let image = UIImage(named:"share_media")
         button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(handleShare), for: .touchUpInside)
         button.tintColor = UIColor.white
         return button
     }()
@@ -98,7 +98,6 @@ class VideoPlayerView: UIView {
     
     @objc func handlePause(){
         if isPlaying{
-            videoDelegate?.thumbnailGenerated(thumbImage: generateThumbImage())
             quPlayer?.pause()
             pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
         }else{
@@ -109,9 +108,11 @@ class VideoPlayerView: UIView {
         isPlaying = !isPlaying
     }
     
+    @objc func handleShare(){
+
+    }
+    
     @objc func handleMinimize(){
-        
-        handlePause()
         videoDelegate?.minimizeButtonDidTapped()
     }
     
@@ -152,13 +153,9 @@ class VideoPlayerView: UIView {
             let value = Float64(videoSlider.value) * totalSeconds
             let seekTime = CMTime(value: CMTimeValue(value), timescale: 1)
             quPlayer?.seek(to: seekTime, completionHandler: { (completeSeek) in
-
             })
         }
     }
-    
-    
-    
     //-------------------------------
     
     override init(frame: CGRect) {
@@ -180,11 +177,6 @@ class VideoPlayerView: UIView {
         pausePlayButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         pausePlayButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        
-//        controlsContainerView.addSubview(thumbImageView)
-//        controlsContainerView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: thumbImageView)
-//        controlsContainerView.addConstraintsWithFormat(format: "V:|-0-[v0]-0-|", views: thumbImageView)
-
         controlsContainerView.addSubview(minimizeButton)
         minimizeButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 15).isActive = true
         minimizeButton.topAnchor.constraint(equalTo: topAnchor, constant: 22).isActive = true
@@ -236,12 +228,15 @@ class VideoPlayerView: UIView {
         backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         quPlayer?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
         
-        let interval = CMTime(value: 1, timescale: 2)
+//        let interval = CMTime(value: 1, timescale: 2)
+        let interval = CMTime(seconds: 1/60,
+                              preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         quPlayer?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
             let seconds = CMTimeGetSeconds(progressTime)
             let secondsString = String(format: "%02d", Int(seconds) % 60)
             let minutesString = String(format: "%02d", Int(seconds) / 60)
             self.currentTimerLabel.text = "\(minutesString):\(secondsString)"
+            self.videoDelegate?.renderingVideoToBitmap(bitmapData: self.accurateScreenShot())
             if let duration = self.quPlayer?.currentItem?.duration{
                 let durationSection = CMTimeGetSeconds(duration)
                 
@@ -250,23 +245,27 @@ class VideoPlayerView: UIView {
         })
     }
     
-    func generateThumbImage() -> UIImage?{
+    func accurateScreenShot()-> UIImage {
         guard let items = quPlayer?.items() else {
-            return nil
+            return UIImage(named:"mv_bitmap")!
         }
         let item = items.first
-        guard let asset = item?.asset else {return nil}
+        guard let asset = item?.asset else {return  UIImage(named:"mv_bitmap")!}
         do{
             let imgGenerator = AVAssetImageGenerator(asset: asset)
             imgGenerator.appliesPreferredTrackTransform = true
+            imgGenerator.requestedTimeToleranceAfter = kCMTimeZero
+            imgGenerator.requestedTimeToleranceBefore = kCMTimeZero
+            
+            
             let cgImage = try imgGenerator.copyCGImage(at: (item?.currentTime())!, actualTime: nil)
             let uiImage = UIImage(cgImage: cgImage)
             return uiImage
         }catch {
-            return nil
+            return UIImage(named:"mv_bitmap")!
         }
     }
-
+  
     func playVideoWithUrl(videoUrl:String){
         if let url = URL(string: videoUrl){
             quPlayer?.pause()
@@ -287,10 +286,7 @@ class VideoPlayerView: UIView {
     {
         print("Video Finish \(notification)")
     }
-    
-    @objc func readVideoStatus(notification: Notification){
-//         print("AVPlayerItemTimeJumped -> \(notification)")
-    }
+
     
     func setupVideoPlayer(){
         quPlayer = AVQueuePlayer.init()
@@ -301,17 +297,26 @@ class VideoPlayerView: UIView {
         let selector = #selector(playerItemDidReachEnd(notification:))
         let name = NSNotification.Name.AVPlayerItemDidPlayToEndTime
         NotificationCenter.default.addObserver(self, selector: selector, name: name, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(readVideoStatus(notification:)), name: Notification.Name.AVPlayerItemTimeJumped, object: nil)
+        quPlayer?.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.new, context: nil)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+
         if keyPath == "currentItem.loadedTimeRanges"{
             activityIndicationView.stopAnimating()
             controlsContainerView.backgroundColor = UIColor.clear
             pausePlayButton.isHidden = false
             isPlaying = true
             
+        }
+        if keyPath == "rate" {
+            if (quPlayer?.rate == 0.0) {
+//                 print("playback stopped")
+            } else if (quPlayer?.rate == 1.0) {
+//                 print("normal playback")
+            } else if (quPlayer?.rate == -1.0) {
+//                print("reverse playback")
+            }
         }
     }
     
@@ -339,23 +344,25 @@ class VideoPlayerView: UIView {
 class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
     
     
-    
-    
-    func minimizeButtonDidTapped() {
-        minimizeView()
-    }
     let videoLauncherView:UIView = UIView()
     var videoThumb:VideoThumbView!
     var videoPlayerView:VideoPlayerView!
+    let vidImageView:UIImageView = {
+        let image = UIImage(named:"mv_bitmap")
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
     
     override init(){
         super.init()
        if let keyWindow = UIApplication.shared.keyWindow{
  
+            videoLauncherView.backgroundColor = UIColor.blue
             let height = keyWindow.frame.width * 9 / 16
             let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
             videoPlayerView = VideoPlayerView(frame: CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height))
-            videoLauncherView.backgroundColor = UIColor.blue
+        
     
             videoPlayerView.videoDelegate = self
             videoPlayerView.frame = videoPlayerFrame
@@ -375,7 +382,12 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
         
             videoLauncherView.addConstraintsWithFormat(format: "H:|-8-[v0]-8-|", views: videoThumb)
             videoLauncherView.addConstraintsWithFormat(format: "V:[v1(50)]-10-[v0]", views: videoPlayerView,videoThumb)
+        
 
+            videoLauncherView.addSubview(vidImageView)
+            videoLauncherView.addConstraintsWithFormat(format: "H:|-8-[v0]-8-|", views: vidImageView)
+            videoLauncherView.addConstraintsWithFormat(format: "V:|-50-[v0]", views: vidImageView)
+        
             keyWindow.addSubview(videoLauncherView)
         }
     }
@@ -384,18 +396,21 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
         minimizeView()
     }
     
+    func renderingVideoToBitmap(bitmapData: UIImage) {
+        //vidImageView.image = bitmapData
+        videoThumb.videoImageView.image = bitmapData
+    }
+    
     func minimizeView(){
         if let keyWindow = UIApplication.shared.keyWindow{
             UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-//                let frameY = (keyWindow.frame.height - (keyWindow.frame.width * 9 / 16) )
-                 let frameY = (keyWindow.frame.height - 10 - 10 - 50)  // 10 from half of distance between videoPlayerView,videoThumb
+                 let frameY = (keyWindow.frame.height - 10 - 10 - 50)  // 10 from constraint 50 from thumb height
                 self.videoLauncherView.frame = CGRect(x: 0, y: frameY, width: keyWindow.frame.width, height: keyWindow.frame.height)
             }) { (completed:Bool) in
 
                 //self.videoLauncherView.alpha = 1
             }
         }
-//        print("minimize")
     }
     
     func showVideoPlayer(withUrl url:String){
@@ -415,6 +430,10 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
     }
     
     //------ delegate thumbvideo
+    
+    func minimizeButtonDidTapped() {
+        minimizeView()
+    }
     func thumbnailGenerated(thumbImage: UIImage?) {
         if let thumbImage = thumbImage{
             videoThumb.videoImageView.image = thumbImage
