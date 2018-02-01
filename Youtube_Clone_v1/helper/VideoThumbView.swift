@@ -11,6 +11,7 @@ import UIKit
 protocol VideoThumbViewDelegate{
     func pauseButtonTapped()
     func closeButtonTapped()
+    func maximizeButtonTapped()
 }
 
 class VideoThumbView:UIView {
@@ -18,7 +19,6 @@ class VideoThumbView:UIView {
     var videoThumbDelegate:VideoThumbViewDelegate?
     
     var videoImageView:UIImageView = {
-       // let image = UIImage(named: "mv_bitmap")
         let imageView = UIImageView()
         imageView.backgroundColor = UIColor.black
         imageView.contentMode = .scaleAspectFill
@@ -85,6 +85,9 @@ class VideoThumbView:UIView {
         titleLbl.addSubview(subtitleLbl)
         
         self.addSubview(videoImageView)
+        print("check \(videoImageView.isUserInteractionEnabled)")
+        videoImageView.isUserInteractionEnabled = true
+        videoImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageViewTap)))
         self.addSubview(titleView)
         self.addSubview(pausePlayButton)
         self.addSubview(closeButton)
@@ -109,8 +112,12 @@ class VideoThumbView:UIView {
         videoThumbDelegate?.pauseButtonTapped()
     }
     
+    @objc func handleImageViewTap(){
+        //print("maximize")
+        videoThumbDelegate?.maximizeButtonTapped()
+    }
+    
     @objc func handleClose(){
-//        print("close")
         videoThumbDelegate?.closeButtonTapped()
     }
     
