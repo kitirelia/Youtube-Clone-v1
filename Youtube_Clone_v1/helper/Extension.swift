@@ -17,6 +17,8 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return img!
     }
+    
+   
 }
 
 extension UIColor{

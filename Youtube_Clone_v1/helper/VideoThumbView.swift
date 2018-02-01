@@ -18,8 +18,9 @@ class VideoThumbView:UIView {
     var videoThumbDelegate:VideoThumbViewDelegate?
     
     var videoImageView:UIImageView = {
-        let image = UIImage(named: "mv_bitmap")
-        let imageView = UIImageView(image: image)
+       // let image = UIImage(named: "mv_bitmap")
+        let imageView = UIImageView()
+        imageView.backgroundColor = UIColor.black
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
@@ -111,6 +112,18 @@ class VideoThumbView:UIView {
     @objc func handleClose(){
 //        print("close")
         videoThumbDelegate?.closeButtonTapped()
+    }
+    
+    func setPlayPauseState(isPlaying:Bool){
+        if isPlaying{
+           
+            pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
+        }else{
+            
+            pausePlayButton.setImage(UIImage(named:"pause_24"), for: .normal)
+        }
+        
+        
     }
     
 }
