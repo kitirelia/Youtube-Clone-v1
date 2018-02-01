@@ -16,6 +16,7 @@
 		6413B5F22015CDC700841524 /* SubscriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6413B5F12015CDC700841524 /* SubscriptionCell.swift */; };
 		6413B5F42016D5A300841524 /* VideoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6413B5F32016D5A300841524 /* VideoLauncher.swift */; };
 		6413B5F62016F5D900841524 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6413B5F52016F5D900841524 /* Media.xcassets */; };
+		641BF93720219BAF005AF2B9 /* VideoThumbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641BF93620219BAF005AF2B9 /* VideoThumbView.swift */; };
 		6458D9E520198D0C00530427 /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6458D9E420198D0C00530427 /* VideoPlayer.swift */; };
 		64847058200F02080003857B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847057200F02080003857B /* AppDelegate.swift */; };
 		6484705A200F02080003857B /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847059200F02080003857B /* HomeController.swift */; };
@@ -36,6 +37,7 @@
 		6413B5F12015CDC700841524 /* SubscriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionCell.swift; sourceTree = "<group>"; };
 		6413B5F32016D5A300841524 /* VideoLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLauncher.swift; sourceTree = "<group>"; };
 		6413B5F52016F5D900841524 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		641BF93620219BAF005AF2B9 /* VideoThumbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoThumbView.swift; sourceTree = "<group>"; };
 		6458D9E420198D0C00530427 /* VideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayer.swift; sourceTree = "<group>"; };
 		64847054200F02080003857B /* Youtube_Clone_v1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Youtube_Clone_v1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64847057200F02080003857B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 			children = (
 				6484706A20105AF30003857B /* Extension.swift */,
 				6413B5F32016D5A300841524 /* VideoLauncher.swift */,
+				641BF93620219BAF005AF2B9 /* VideoThumbView.swift */,
 			);
 			path = helper;
 			sourceTree = "<group>";
@@ -219,6 +222,7 @@
 				6484706B20105AF30003857B /* Extension.swift in Sources */,
 				6413B5E92011D95800841524 /* SettingCell.swift in Sources */,
 				6413B5E520109F6900841524 /* Video.swift in Sources */,
+				641BF93720219BAF005AF2B9 /* VideoThumbView.swift in Sources */,
 				6484706E20105B7D0003857B /* VideoCell.swift in Sources */,
 				6413B5F42016D5A300841524 /* VideoLauncher.swift in Sources */,
 				6413B5EC201591BF00841524 /* ApiService.swift in Sources */,

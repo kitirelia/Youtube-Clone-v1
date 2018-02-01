@@ -12,6 +12,8 @@ import AVFoundation
 
 protocol VideoPlayerViewDelegate{
     func minimizeButtonDidTapped()
+    func thumbnailGenerated(thumbImage:UIImage?)
+    
 }
 
 class VideoPlayerView: UIView {
@@ -21,11 +23,6 @@ class VideoPlayerView: UIView {
     var quPlayer:AVQueuePlayer?
     var isPlaying = false
     var playerLayer:AVPlayerLayer?
-    
-    // smooth
-    var isSeekInProgress = false
-    var chaseTime = kCMTimeZero
-    var playerCurrentItemStatus:AVPlayerItemStatus = .unknown
     
     let activityIndicationView:UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -98,8 +95,10 @@ class VideoPlayerView: UIView {
         return view
     }()
     
+    
     @objc func handlePause(){
         if isPlaying{
+            videoDelegate?.thumbnailGenerated(thumbImage: generateThumbImage())
             quPlayer?.pause()
             pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
         }else{
@@ -111,7 +110,8 @@ class VideoPlayerView: UIView {
     }
     
     @objc func handleMinimize(){
-        print("Fonnd tap minimize")
+        
+        handlePause()
         videoDelegate?.minimizeButtonDidTapped()
     }
     
@@ -148,8 +148,6 @@ class VideoPlayerView: UIView {
     @objc func handleSliderChange(){
         
         if let duration = quPlayer?.currentItem?.duration{
-            //print("seek to duration \(duration)")
-            //stopPlayingAndSeekSmoothlyToTime(newChaseTime: duration)
             let totalSeconds = CMTimeGetSeconds(duration)
             let value = Float64(videoSlider.value) * totalSeconds
             let seekTime = CMTime(value: CMTimeValue(value), timescale: 1)
@@ -181,6 +179,11 @@ class VideoPlayerView: UIView {
         pausePlayButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         pausePlayButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         pausePlayButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        
+//        controlsContainerView.addSubview(thumbImageView)
+//        controlsContainerView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: thumbImageView)
+//        controlsContainerView.addConstraintsWithFormat(format: "V:|-0-[v0]-0-|", views: thumbImageView)
 
         controlsContainerView.addSubview(minimizeButton)
         minimizeButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 15).isActive = true
@@ -225,6 +228,7 @@ class VideoPlayerView: UIView {
         currentTimerLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
         currentTimerLabel.heightAnchor.constraint(equalToConstant: 22).isActive = true
 
+        
         controlsContainerView.addSubview(videoSlider)
         controlsContainerView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: videoSlider)
         
@@ -244,6 +248,23 @@ class VideoPlayerView: UIView {
                 self.videoSlider.value = Float(seconds / durationSection)
             }
         })
+    }
+    
+    func generateThumbImage() -> UIImage?{
+        guard let items = quPlayer?.items() else {
+            return nil
+        }
+        let item = items.first
+        guard let asset = item?.asset else {return nil}
+        do{
+            let imgGenerator = AVAssetImageGenerator(asset: asset)
+            imgGenerator.appliesPreferredTrackTransform = true
+            let cgImage = try imgGenerator.copyCGImage(at: (item?.currentTime())!, actualTime: nil)
+            let uiImage = UIImage(cgImage: cgImage)
+            return uiImage
+        }catch {
+            return nil
+        }
     }
 
     func playVideoWithUrl(videoUrl:String){
@@ -315,26 +336,47 @@ class VideoPlayerView: UIView {
 
 
 
-class VideoLauncher:NSObject,VideoPlayerViewDelegate{
+class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
+    
+    
+    
+    
     func minimizeButtonDidTapped() {
         minimizeView()
     }
-    let blackView:UIView = UIView()
-
+    let videoLauncherView:UIView = UIView()
+    var videoThumb:VideoThumbView!
     var videoPlayerView:VideoPlayerView!
     
     override init(){
         super.init()
        if let keyWindow = UIApplication.shared.keyWindow{
-            blackView.backgroundColor = UIColor.white
-            blackView.frame = CGRect(x: keyWindow.frame.width - 50, y: keyWindow.frame.height - 50, width: 50, height: 50)
+ 
             let height = keyWindow.frame.width * 9 / 16
             let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
             videoPlayerView = VideoPlayerView(frame: CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height))
+            videoLauncherView.backgroundColor = UIColor.blue
+    
             videoPlayerView.videoDelegate = self
             videoPlayerView.frame = videoPlayerFrame
-            blackView.addSubview(videoPlayerView)
-            keyWindow.addSubview(blackView)
+            videoPlayerView.backgroundColor = UIColor.black
+        
+            videoPlayerView.translatesAutoresizingMaskIntoConstraints = false
+            videoLauncherView.addSubview(videoPlayerView)
+        
+            videoThumb = VideoThumbView(frame: CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: 100))
+            videoThumb.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+            videoThumb.translatesAutoresizingMaskIntoConstraints = false
+            videoThumb.videoThumbDelegate = self
+            videoLauncherView.addSubview(videoThumb)
+        
+            videoLauncherView.addConstraintsWithFormat(format: "V:|-70-[v0(\(height))]", views: videoPlayerView)
+            videoLauncherView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: videoPlayerView)
+        
+            videoLauncherView.addConstraintsWithFormat(format: "H:|-8-[v0]-8-|", views: videoThumb)
+            videoLauncherView.addConstraintsWithFormat(format: "V:[v1(50)]-10-[v0]", views: videoPlayerView,videoThumb)
+
+            keyWindow.addSubview(videoLauncherView)
         }
     }
     
@@ -345,30 +387,46 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate{
     func minimizeView(){
         if let keyWindow = UIApplication.shared.keyWindow{
             UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                let minFrameWidth = (keyWindow.frame.width * 9 / 16) * 0.2
-                let minFrameHeight = (keyWindow.frame.height * 9 / 16) * 0.2
-                let frameY = keyWindow.frame.height - (keyWindow.frame.width * 9 / 16)
-                self.blackView.frame = CGRect(x: 0, y: frameY, width: minFrameWidth, height: minFrameHeight)
+//                let frameY = (keyWindow.frame.height - (keyWindow.frame.width * 9 / 16) )
+                 let frameY = (keyWindow.frame.height - 10 - 10 - 50)  // 10 from half of distance between videoPlayerView,videoThumb
+                self.videoLauncherView.frame = CGRect(x: 0, y: frameY, width: keyWindow.frame.width, height: keyWindow.frame.height)
             }) { (completed:Bool) in
-                
-                self.blackView.alpha = 1
+
+                //self.videoLauncherView.alpha = 1
             }
         }
+//        print("minimize")
     }
     
     func showVideoPlayer(withUrl url:String){
         if let keyWindow = UIApplication.shared.keyWindow{
             videoPlayerView.playUrl = url
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                self.blackView.frame = keyWindow.frame
+//                self.videoLauncherView.frame = keyWindow.frame
+//                let frameY = (keyWindow.frame.height - 10 - 10 - 50)  // 10 from half of distance between videoPlayerView,videoThumb
+                self.videoLauncherView.frame = CGRect(x: 0, y: 0 - 10 - 10 - 50, width: keyWindow.frame.width, height: keyWindow.frame.height + 10 + 10 + 50)
             }, completion: { (completedAnimation) in
                 self.videoPlayerView.playVideoWithUrl(videoUrl: url)
                 UIApplication.shared.isStatusBarHidden = true
-                
                 self.videoPlayerView.layoutIfNeeded()
                 
             })
         }
+    }
+    
+    //------ delegate thumbvideo
+    func thumbnailGenerated(thumbImage: UIImage?) {
+        if let thumbImage = thumbImage{
+            videoThumb.videoImageView.image = thumbImage
+        }
+    }
+    func pauseButtonTapped() {
+        print("pause")
+        videoPlayerView.handlePause()
+    }
+    
+    func closeButtonTapped() {
+        print("cancel")
     }
     
 }
