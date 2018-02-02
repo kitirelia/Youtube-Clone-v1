@@ -26,6 +26,8 @@
 		6484706E20105B7D0003857B /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6484706D20105B7D0003857B /* VideoCell.swift */; };
 		64847071201076550003857B /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847070201076550003857B /* MenuBar.swift */; };
 		64999FB52023406A00F88E64 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64999FB42023406A00F88E64 /* VideoPlayerView.swift */; };
+		64999FB7202455A100F88E64 /* VideoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64999FB6202455A100F88E64 /* VideoDetailView.swift */; };
+		64999FB920245AAD00F88E64 /* ChannelDetailVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64999FB820245AAD00F88E64 /* ChannelDetailVIew.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +52,8 @@
 		6484706D20105B7D0003857B /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		64847070201076550003857B /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
 		64999FB42023406A00F88E64 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
+		64999FB6202455A100F88E64 /* VideoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDetailView.swift; sourceTree = "<group>"; };
+		64999FB820245AAD00F88E64 /* ChannelDetailVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelDetailVIew.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +137,8 @@
 				6413B5F12015CDC700841524 /* SubscriptionCell.swift */,
 				64999FB42023406A00F88E64 /* VideoPlayerView.swift */,
 				641BF93620219BAF005AF2B9 /* VideoThumbView.swift */,
+				64999FB6202455A100F88E64 /* VideoDetailView.swift */,
+				64999FB820245AAD00F88E64 /* ChannelDetailVIew.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -225,6 +231,8 @@
 				6484706B20105AF30003857B /* Extension.swift in Sources */,
 				6413B5E92011D95800841524 /* SettingCell.swift in Sources */,
 				6413B5E520109F6900841524 /* Video.swift in Sources */,
+				64999FB920245AAD00F88E64 /* ChannelDetailVIew.swift in Sources */,
+				64999FB7202455A100F88E64 /* VideoDetailView.swift in Sources */,
 				641BF93720219BAF005AF2B9 /* VideoThumbView.swift in Sources */,
 				6484706E20105B7D0003857B /* VideoCell.swift in Sources */,
 				6413B5F42016D5A300841524 /* VideoLauncher.swift in Sources */,

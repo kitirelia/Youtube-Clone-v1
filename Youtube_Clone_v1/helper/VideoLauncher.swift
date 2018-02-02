@@ -15,6 +15,8 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
     var videoThumb:VideoThumbView!
     var videoPlayerView:VideoPlayerView!
     var whiteViewBG:UIView = UIView()
+    let videoDetailView = VideoDetailView()
+    let chanelDetailView = ChannelDetailView()
     
     override init(){
         super.init()
@@ -46,13 +48,19 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
         
             videoLauncherView.addConstraintsWithFormat(format: "V:[v0]-[v1]-0-|", views: videoThumb,whiteViewBG)
         
-        
-        
             videoLauncherView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: whiteViewBG)
         
             videoLauncherView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: videoThumb)
 
             videoLauncherView.addConstraintsWithFormat(format: "V:|-0-[v1]-0-[v0]", views: videoPlayerView,videoThumb)
+        
+            videoLauncherView.addSubview(videoDetailView)
+            videoLauncherView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: videoDetailView)
+            videoLauncherView.addConstraintsWithFormat(format: "V:[v0]-10-[v1(50)]", views: videoPlayerView,videoDetailView)
+        
+            videoLauncherView.addSubview(chanelDetailView)
+        videoLauncherView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: chanelDetailView)
+        videoLauncherView.addConstraintsWithFormat(format: "V:[v0]-10-[v1(50)]", views: videoDetailView,chanelDetailView)
         
             keyWindow.addSubview(videoLauncherView)
         }
