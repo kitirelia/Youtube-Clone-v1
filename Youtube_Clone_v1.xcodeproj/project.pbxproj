@@ -118,7 +118,6 @@
 			children = (
 				6484706A20105AF30003857B /* Extension.swift */,
 				6413B5F32016D5A300841524 /* VideoLauncher.swift */,
-				641BF93620219BAF005AF2B9 /* VideoThumbView.swift */,
 			);
 			path = helper;
 			sourceTree = "<group>";
@@ -133,6 +132,7 @@
 				6413B5EF2015C96F00841524 /* TrendingCell.swift */,
 				6413B5F12015CDC700841524 /* SubscriptionCell.swift */,
 				64999FB42023406A00F88E64 /* VideoPlayerView.swift */,
+				641BF93620219BAF005AF2B9 /* VideoThumbView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";

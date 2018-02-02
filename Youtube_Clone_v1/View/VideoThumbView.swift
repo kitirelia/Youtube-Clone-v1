@@ -71,54 +71,40 @@ class VideoThumbView:UIView {
     
     lazy var gradientView:UIView = {
         let view = UIView()
-//        view.backgroundColor = UIColor.black.withAlphaComponent(0.1)
-        view.backgroundColor = UIColor.red
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.1)
         return view
     }()
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.backgroundColor = UIColor.red
-        
-        let ratio = frame.width / 5
+        let ratio = (frame.width / 5)
         
         titleLbl.text = "TWICE Like OOH-AHH(OOH-AHH하게) M/V"
         subtitleLbl.text = "jypentertainment"
         
-        
-        
         titleView.addSubview(titleLbl)
         titleLbl.addSubview(subtitleLbl)
-        
         
         self.addSubview(gradientView)
         self.addSubview(videoImageView)
         videoImageView.isUserInteractionEnabled = true
         videoImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageViewTap)))
-        
-        
-        
-        
+
         self.addSubview(titleView)
         self.addSubview(pausePlayButton)
         self.addSubview(closeButton)
-        
-       
-        
-        self.addConstraintsWithFormat(format: "H:|-8-[v0(\(1.75 * ratio))]-0-[v1(\(1.25 * ratio))]-0-[v2(\(1 * ratio))]-0-[v3(\(1 * ratio))]-8-|", views: videoImageView,titleView,pausePlayButton,closeButton)
+
+        self.addConstraintsWithFormat(format: "H:|-8-[v0(\(1.75 * ratio))]-0-[v1(\(1.45 * ratio))]-0-[v2(\(0.8 * ratio))]-0-[v3(\(0.75 * ratio))]-8-|", views: videoImageView,titleView,pausePlayButton,closeButton)
         self.addConstraintsWithFormat(format: "V:|-8-[v0]-8-|", views: videoImageView)
         self.addConstraintsWithFormat(format: "V:|-8-[v0]-8-|", views: titleView)
         self.addConstraintsWithFormat(format: "V:|-8-[v0]-8-|", views: pausePlayButton)
         self.addConstraintsWithFormat(format: "V:|-8-[v0]-8-|", views: closeButton)
-        
+
         titleView.addConstraintsWithFormat(format: "H:|-5-[v0]-0-|", views: titleLbl)
         titleView.addConstraintsWithFormat(format: "H:|-5-[v0]-0-|", views: subtitleLbl)
         titleView.addConstraintsWithFormat(format: "V:|-5-[v0]-5-[v1]", views: titleLbl,subtitleLbl)
-        
-        
-        
+
         self.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: gradientView)
         self.addConstraintsWithFormat(format: "V:|-0-[v0]-0-|", views: gradientView)
         
@@ -152,5 +138,18 @@ class VideoThumbView:UIView {
         }
     }
     
+    override func layoutSublayers(of layer: CALayer) {
+        super.layoutSublayers(of: layer)
+//        setupGradientLayer()
+    }
+    
+    private func setupGradientLayer(){
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = bounds
+        gradientLayer.colors = [UIColor.clear.cgColor,UIColor.black.cgColor]
+        gradientLayer.locations = [0.0,0.8]
+        
+        self.layer.addSublayer(gradientLayer)
+    }
     
 }

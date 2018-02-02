@@ -98,7 +98,6 @@ class VideoPlayerView: UIView {
     }()
     
     @objc func handleControlContainerTap(){
-        
         if isShowingControlButton{
             hiddenContronView()
         }else{
@@ -106,14 +105,22 @@ class VideoPlayerView: UIView {
         }
     }
     
+    @objc func handleSwipeDown(){
+        videoDelegate?.minimizeButtonDidTapped()
+    }
+    
     func hiddenContronView(){
-        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.pausePlayButton.alpha = 0
             self.minimizeButton.alpha = 0
             self.minimizeButton.alpha = 0
             self.settingsButton.alpha = 0
             self.shareButton.alpha = 0
             self.watchLaterButton.alpha = 0
+            self.fullScrennButton.alpha = 0
+            self.videoLenghtLabel.alpha = 0
+            self.currentTimerLabel.alpha = 0
+            self.videoSlider.setThumbImage(UIImage(), for: .normal)
         }) { (completed:Bool) in
             self.isShowingControlButton = false
         }
@@ -127,8 +134,13 @@ class VideoPlayerView: UIView {
             self.settingsButton.alpha = 1
             self.shareButton.alpha = 1
             self.watchLaterButton.alpha = 1
+            self.fullScrennButton.alpha = 1
+            self.videoLenghtLabel.alpha = 1
+            self.currentTimerLabel.alpha = 1
+            self.videoSlider.setThumbImage(UIImage(named:"red_circle_"), for: .normal)
         }) { (completed:Bool) in
             self.isShowingControlButton = true
+           
             //self.videoLauncherView.alpha = 1
         }
     }
@@ -194,15 +206,12 @@ class VideoPlayerView: UIView {
         }
     }
     // MARK: - Init
-    
-    
-//    }
+
     func setupVideoPlayer(){
         quPlayer = AVQueuePlayer.init()
         playerLayer = AVPlayerLayer(player: quPlayer)
         self.layer.addSublayer(playerLayer!)
         self.layer.frame = self.frame
-    
         let selector = #selector(playerItemDidReachEnd(notification:))
         let name = NSNotification.Name.AVPlayerItemDidPlayToEndTime
         NotificationCenter.default.addObserver(self, selector: selector, name: name, object: nil)
@@ -233,6 +242,11 @@ class VideoPlayerView: UIView {
         super.init(frame: frame)
         
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleControlContainerTap)))
+        
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeDown))
+        swipeDown.direction = .down
+        self.addGestureRecognizer(swipeDown)
+        
         setupVideoPlayer()
         
         setupGradientLayer()
@@ -354,10 +368,14 @@ class VideoPlayerView: UIView {
     
     @objc func playerItemDidReachEnd(notification: Notification)
     {
-        print("Video Finish \(notification)")
+        print("\n\nVideo Finish ")
+        let item = quPlayer?.currentItem!
+        quPlayer?.remove(item!)
+        item?.seek(to: kCMTimeZero, completionHandler: nil)
+        quPlayer?.insert(item!, after: nil)
+        handlePause()
+        showControlButton()
     }
-    
-    
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "currentItem.loadedTimeRanges"{
@@ -366,7 +384,6 @@ class VideoPlayerView: UIView {
             pausePlayButton.isHidden = false
             isPlaying = true
         }
-        
     }
     
     override func layoutSublayers(of layer: CALayer) {
