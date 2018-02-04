@@ -83,36 +83,55 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
                  let frameY = (keyWindow.frame.height - 10 - 10 - 50 )  // 10 from constraint 50 from thumb height
                 self.videoLauncherView.frame = CGRect(x: 0, y: frameY, width: keyWindow.frame.width, height: keyWindow.frame.height)
             }) { (completed:Bool) in
-                
+                UIApplication.shared.isStatusBarHidden = true
             }
         }
     }
     
-    func showVideoPlayer(withUrl url:String){
+//    func showVideoPlayer(video:Video){
+//        if let keyWindow = UIApplication.shared.keyWindow{
+//            if let videoUrl = video.video_url{
+//                videoPlayerView.playUrl = videoUrl
+//                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+//                    self.videoLauncherView.frame = CGRect(x: 0, y: 0 - 10 - 10 - 50, width: keyWindow.frame.width, height: keyWindow.frame.height + 10 + 10 + 50)
+//                }, completion: { (completedAnimation) in
+//                    self.videoPlayerView.playVideoWithUrl(videoUrl: videoUrl)
+//                    UIApplication.shared.isStatusBarHidden = true
+//                    self.videoPlayerView.layoutIfNeeded()
+//
+//                })
+//            }
+//        }
+//    }
+    
+    func playNewVideo(video:Video){
         if let keyWindow = UIApplication.shared.keyWindow{
-            videoPlayerView.playUrl = url
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                self.videoLauncherView.frame = CGRect(x: 0, y: 0 - 10 - 10 - 50, width: keyWindow.frame.width, height: keyWindow.frame.height + 10 + 10 + 50)
-            }, completion: { (completedAnimation) in
-                self.videoPlayerView.playVideoWithUrl(videoUrl: url)
-                UIApplication.shared.isStatusBarHidden = true
-                self.videoPlayerView.layoutIfNeeded()
+            if video.video_url != nil{
                 
-            })
+                chanelDetailView.setupUI(video: video)
+                videoDetailView.setupUI(video: video)
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                    self.videoLauncherView.frame = CGRect(x: 0, y: 0 - 10 - 10 - 50, width: keyWindow.frame.width, height: keyWindow.frame.height + 10 + 10 + 50)
+                }, completion: { (completedAnimation) in
+                    UIApplication.shared.isStatusBarHidden = true
+                    self.videoPlayerView.setupVideoPlayer(video: video)
+                })
+            }
         }
     }
+    
     
     //------ delegate thumbvideo
     
     func maximizeButtonTapped() {
-        if let keyWindow = UIApplication.shared.keyWindow{
-            
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                self.videoLauncherView.frame = CGRect(x: 0, y: 0 - 10 - 10 - 50, width: keyWindow.frame.width, height: keyWindow.frame.height + 10 + 10 + 50)
-            }, completion: { (completedAnimation) in
-                
-            })
-        }
+//        if let keyWindow = UIApplication.shared.keyWindow{
+//
+//            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+//                self.videoLauncherView.frame = CGRect(x: 0, y: 0 - 10 - 10 - 50, width: keyWindow.frame.width, height: keyWindow.frame.height + 10 + 10 + 50)
+//            }, completion: { (completedAnimation) in
+//                UIApplication.shared.isStatusBarHidden = false
+//            })
+//        }
     }
     
     func minimizeButtonDidTapped() {

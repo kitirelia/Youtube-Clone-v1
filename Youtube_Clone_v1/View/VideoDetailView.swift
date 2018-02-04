@@ -13,9 +13,9 @@ class VideoDetailView:UIView{
     
     lazy var titleLabel:UILabel = {
        let label = UILabel()
-        label.text = "TWICE Like OOH-AHH (OOH-AHH하게) M/V"
+//        label.text = "TWICE Like OOH-AHH (OOH-AHH하게) M/V"
         label.textColor = UIColor.darkGray
-        label.numberOfLines = 2
+        label.numberOfLines = 1
         label.backgroundColor = UIColor.red
         label.font = UIFont(name: label.font.fontName, size: 14)
         return label
@@ -36,7 +36,7 @@ class VideoDetailView:UIView{
         self.addSubview(titleLabel)
         self.addSubview(numberOfViewsLabel)
         
-        self.addConstraintsWithFormat(format: "V:|-8-[v0]-8@750-[v1]-8-|", views: titleLabel,numberOfViewsLabel)
+        self.addConstraintsWithFormat(format: "V:|-4-[v0]-4-[v1]-4-|", views: titleLabel,numberOfViewsLabel)
         self.addConstraintsWithFormat(format: "H:|-8-[v0]-8-|", views: titleLabel)
         self.addConstraintsWithFormat(format: "H:|-8-[v0]-8-|", views: numberOfViewsLabel)
         
@@ -44,6 +44,17 @@ class VideoDetailView:UIView{
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupUI(video:Video){
+        if let title = video.title,let numOfView = video.numberOfViews{
+            
+            let numberFormatter = NumberFormatter()
+            numberFormatter.numberStyle = .decimal
+            let num_of_view = numberFormatter.string(from: numOfView)
+            numberOfViewsLabel.text = "\(num_of_view!) views"
+            titleLabel.text = title
+        }
     }
     
 }

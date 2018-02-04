@@ -61,9 +61,6 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
         
     }
     
-    
-    
-    
     func scrollToMenuIndex(menuIndex:Int){
         let indexPath = IndexPath(item: menuIndex, section: 0)
         collectionView?.scrollToItem(at: indexPath, at: [], animated: true)
@@ -79,7 +76,6 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
     
     lazy var videoLauncher:VideoLauncher = {
        let launcher = VideoLauncher()
-        
         return launcher
     }()
     
@@ -95,7 +91,7 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
 //        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
 //        navigationController?.pushViewController(dummySettingViewController, animated: true)
     }
-    
+
     func setTitleForIndex(index:Int){
         if let titleLabel = navigationItem.titleView as? UILabel{
             titleLabel.text = "  \(titles[index])"
@@ -157,9 +153,10 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
         }
     }
     
-    func feedCellTapped(url: String) {
-        print("call from feed cell")
-        videoLauncher.showVideoPlayer(withUrl: url)
+    func feedCellTapped(video: Video) {
+//        print("call from feed cell")
+//        videoLauncher.showVideoPlayer(video: video)
+        videoLauncher.playNewVideo(video: video)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

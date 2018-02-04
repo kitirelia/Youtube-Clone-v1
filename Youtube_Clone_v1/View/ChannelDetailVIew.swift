@@ -10,9 +10,9 @@ import UIKit
 
 class ChannelDetailView:UIView {
     
-    let profileImageView:UIImageView = {
+    let profileImageView:CustomImageView = {
         let image = UIImage(named:"jyp")
-        let imageView = UIImageView(image: image)
+        let imageView = CustomImageView(image: image)
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 16
@@ -81,6 +81,17 @@ class ChannelDetailView:UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setupUI(video:Video){
+        if let channelName = video.channel?.name,let subscribers = video.channel?.subscribers,let profile_url =  video.channel?.profileImageName{
+            channelNameLabel.text = channelName
+            let numberFormatter = NumberFormatter()
+            numberFormatter.numberStyle = .decimal
+            let num_of_subscriber = numberFormatter.string(from: subscribers)
+            memberSubscribeLabel.text = "\(num_of_subscriber!) subscribers"
+            profileImageView.loadImageUsingUrlString(urlString: profile_url)
+        }
+        
+    }
     
     
 }

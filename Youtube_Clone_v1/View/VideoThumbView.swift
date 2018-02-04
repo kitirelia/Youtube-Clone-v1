@@ -81,7 +81,7 @@ class VideoThumbView:UIView {
         let ratio = (frame.width / 5)
         
         titleLbl.text = "TWICE Like OOH-AHH(OOH-AHH하게) M/V"
-        subtitleLbl.text = "jypentertainment"
+        subtitleLbl.text = "videoThumb"
         
         titleView.addSubview(titleLbl)
         titleLbl.addSubview(subtitleLbl)

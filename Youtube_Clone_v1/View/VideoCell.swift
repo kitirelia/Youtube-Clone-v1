@@ -31,17 +31,13 @@ class VideoCell: BaseCell {
             titleLabel.text = video?.title
             setupThumbnailImage()
             setupProfileImage()
-            
             if let channelName = video?.channel?.name, let numberOfView =  video?.numberOfViews {
-                
                 let numberFormatter = NumberFormatter()
                 numberFormatter.numberStyle = .decimal
-                
                 let subtitleText = "\(channelName) \u{2022} \(numberFormatter.string(from: numberOfView)!) \u{2022} 2 years ago"
                 subtitleTextView.text = subtitleText
             }
             
-            //measure title text
             if let title = video?.title{
                 let size = CGSize(width: frame.width - 16 - 44 - 8 - 16, height: 1000)
                 let option = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
@@ -72,7 +68,7 @@ class VideoCell: BaseCell {
     
     let thumbnailImageView:CustomImageView = {
         let imageView = CustomImageView()
-        imageView.image = UIImage(named: "blank_space")
+//        imageView.image = UIImage(named: "blank_space")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
@@ -80,7 +76,7 @@ class VideoCell: BaseCell {
     
     let userProfileImageView:CustomImageView = {
         let imageView = CustomImageView()
-        imageView.image = UIImage(named:"taylor_profile")
+//        imageView.image = UIImage(named:"taylor_profile")
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 22
         imageView.layer.masksToBounds = true
@@ -96,7 +92,7 @@ class VideoCell: BaseCell {
     let titleLabel:UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.text = "Taylor Swift - Blank Space"
+        lbl.text = ""
         lbl.numberOfLines = 2
         return lbl
     }()
@@ -104,7 +100,7 @@ class VideoCell: BaseCell {
     let subtitleTextView:UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.text = "Taylor SwiftVEVO \u{2022} 1,604,684,607 views \u{2022} 2 years ago"
+//        textView.text = "Taylor SwiftVEVO \u{2022} 1,604,684,607 views \u{2022} 2 years ago"
         textView.textContainerInset = UIEdgeInsetsMake(0, -4, 0, 0)
         textView.textColor = UIColor.lightGray
         return textView

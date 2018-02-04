@@ -206,6 +206,18 @@ class VideoPlayerView: UIView {
         }
     }
     // MARK: - Init
+    
+    func setupVideoPlayer(video:Video){
+        print("setup video")
+        handlePause()
+        
+        
+        DispatchQueue.main.async {
+            self.playUrl = video.video_url
+            self.playVideoWithUrl(videoUrl: self.playUrl!)
+        }
+        
+    }
 
     func setupVideoPlayer(){
         quPlayer = AVQueuePlayer.init()

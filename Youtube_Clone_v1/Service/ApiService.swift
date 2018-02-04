@@ -46,13 +46,16 @@ class ApiService: NSObject {
                     let video = Video()
                     video.title = dictionary["title"] as? String
                     video.thumbnailImageName = dictionary["thumbnail_image_name"] as? String
-                    
+                    video.video_url = dictionary["video_url"] as? String
+                    video.numberOfViews = dictionary["number_of_views"]  as? NSNumber
                     let channelDictionanry = dictionary["channel"] as! [String:AnyObject]
                     
                     let channel = Channel()
                     channel.name = channelDictionanry["name"] as? String
                     channel.profileImageName = channelDictionanry["profile_image_name"] as? String
+                    channel.subscribers = channelDictionanry["subscribers"] as? NSNumber
                     video.channel = channel
+                    
                     
                     videos.append(video)
                 }

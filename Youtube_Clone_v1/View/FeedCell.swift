@@ -9,7 +9,7 @@
 import UIKit
 
 protocol FeedCellDelegate:class{
-    func feedCellTapped(url:String)
+    func feedCellTapped(video:Video)
 }
 
 class FeedCell: BaseCell,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout {
@@ -73,10 +73,8 @@ class FeedCell: BaseCell,UICollectionViewDataSource,UICollectionViewDelegate,UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-       
-        print("tapcell \(indexPath.item)")
-        return
-//        feedCellDelegate?.feedCellTapped(url:videoUrl)
+        let video = videos![indexPath.item]
+        feedCellDelegate?.feedCellTapped(video:video)
     }
     
 }
