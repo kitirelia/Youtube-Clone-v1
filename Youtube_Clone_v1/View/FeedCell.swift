@@ -73,7 +73,10 @@ class FeedCell: BaseCell,UICollectionViewDataSource,UICollectionViewDelegate,UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        feedCellDelegate?.feedCellTapped(url:videoUrl)
+       
+        print("tapcell \(indexPath.item)")
+        return
+//        feedCellDelegate?.feedCellTapped(url:videoUrl)
     }
     
 }

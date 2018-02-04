@@ -14,6 +14,7 @@ class ApiService: NSObject {
     let baseUrl:String = "https://aure.cc/youtube-clone/static"
     
     func fetchVideos(completion:@escaping([Video])->()){
+        print("\(baseUrl)/home.json")
         fetchFeedForUrlString(urlString: "\(baseUrl)/home.json",completion: completion)
     }
     
@@ -28,8 +29,9 @@ class ApiService: NSObject {
     
     func fetchFeedForUrlString(urlString:String,completion:@escaping([Video])->()){
         let url = URL(string: urlString)
-        URLSession.shared.dataTask(with: url!) { (data, response, error) in
-            
+        let request = URLRequest(url: url!, cachePolicy: URLRequest.CachePolicy.reloadIgnoringCacheData, timeoutInterval: 60.0)
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+        
             if error != nil{
                 print("Request json Error \(String(describing: error?.localizedDescription))")
                 return
@@ -37,7 +39,6 @@ class ApiService: NSObject {
             
             do{
                 let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers)
-                
                 var videos = [Video]()
                 
                 for dictionary in json as! [[String:AnyObject]]{
