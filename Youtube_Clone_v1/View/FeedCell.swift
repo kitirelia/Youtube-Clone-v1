@@ -26,8 +26,6 @@ class FeedCell: BaseCell,UICollectionViewDataSource,UICollectionViewDelegate,UIC
     var videos:[Video]?
     
    var videoUrl:String = "https://aure.cc/youtube-clone/video/hyperlapse_new_york.mp4"
-//    var lightsaberColor = "Blue"
-    
     var feedCellDelegate:FeedCellDelegate?
     
     let cellId = "cellId"
