@@ -22,9 +22,9 @@ class VideoDetailView:UIView{
     
     lazy var numberOfViewsLabel:UILabel = {
         let label = UILabel()
-        label.text = "2M views"
+//        label.text = "2M views"
         label.font = UIFont(name: label.font.fontName, size: 11)
-        label.textColor = UIColor.lightGray
+        label.textColor = #colorLiteral(red: 0.4756349325, green: 0.4756467342, blue: 0.4756404161, alpha: 1)
         return label
     }()
     
@@ -52,10 +52,12 @@ class VideoDetailView:UIView{
     func setupUI(video:Video){
         if let title = video.title,let numOfView = video.numberOfViews{
             
-            let numberFormatter = NumberFormatter()
-            numberFormatter.numberStyle = .decimal
-            let num_of_view = numberFormatter.string(from: numOfView)
-            numberOfViewsLabel.text = " \(num_of_view!) views"
+//            let numberFormatter = NumberFormatter()
+//            numberFormatter.numberStyle = .decimal
+//            let num_of_view = numberFormatter.string(from: numOfView)?.shortNumber()
+//            print("num of view \(num_of_view)")
+            let num_of_view = "\(numOfView)"
+            numberOfViewsLabel.text = " \(num_of_view.shortNumber()) views"
             titleLabel.text = title
         }
     }

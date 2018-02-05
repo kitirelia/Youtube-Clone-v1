@@ -56,13 +56,13 @@ extension String{
             }else{
                 char = digits.prefix(upTo: digits.index(digits.startIndex, offsetBy: 1))
             }
-            return "\(char)k"
+            return "\(char)K"
         case 5://43,000 -> 43k
             let index4 = digits.index(digits.startIndex, offsetBy: 2)
-            return "\(digits.prefix(upTo: index4))k"
+            return "\(digits.prefix(upTo: index4))K"
         case 6: //100,000 -> 100k
             let index4 = digits.index(digits.startIndex, offsetBy: 3)
-            return "\(digits.prefix(upTo: index4))k"
+            return "\(digits.prefix(upTo: index4))K"
         case 7...9:
             let cutAt = length - 6
             let index4 = digits.index(digits.startIndex, offsetBy: cutAt)

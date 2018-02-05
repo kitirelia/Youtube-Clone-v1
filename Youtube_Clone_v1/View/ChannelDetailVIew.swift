@@ -53,6 +53,8 @@ class ChannelDetailView:UIView {
         return button
     }()
     
+    var isSubscribe = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -74,6 +76,9 @@ class ChannelDetailView:UIView {
         self.addConstraintsWithFormat(format: "V:|-4-[v0]-4-|", views: profileImageView)
         self.addConstraintsWithFormat(format: "V:|-4-[v0]-4-|", views: labelView)
         self.addConstraintsWithFormat(format: "V:|-8-[v0]-8-|", views: subscribeButton)
+        
+        
+        subscribeButton.addTarget(self, action: #selector(subscriptBtnTap), for: .touchUpInside)
         
     }
     
@@ -97,14 +102,34 @@ class ChannelDetailView:UIView {
         self.layer.addSublayer(bottomBorder)
     }
     
+    @objc func subscriptBtnTap(){
+        
+        
+        if isSubscribe{
+//            subscribeButton.titleLabel?.textColor = UIColor.cyan
+            subscribeButton.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+            subscribeButton.setTitle("SUBSCRIBED", for: .normal)
+        }else{
+//            subscribeButton.titleLabel?.textColor = UIColor.blue
+            subscribeButton.setTitle("SUBSCRIBE", for: .normal)
+            subscribeButton.backgroundColor = UIColor.rgb(red: 235, green: 51, blue: 36)
+        }
+        isSubscribe = !isSubscribe
+    }
+    
+    
     func setupUI(video:Video){
         if let channelName = video.channel?.name,let subscribers = video.channel?.subscribers,let profile_url =  video.channel?.profileImageName{
             channelNameLabel.text = channelName
+            let shortString = "\(subscribers)"
+            
             let numberFormatter = NumberFormatter()
             numberFormatter.numberStyle = .decimal
-            let num_of_subscriber = numberFormatter.string(from: subscribers)
-            memberSubscribeLabel.text = "\(num_of_subscriber!) subscribers"
+//            let num_of_subscriber = numberFormatter.string(from: subscribers)
+//            memberSubscribeLabel.text = "\(num_of_subscriber!) subscribers"
+             memberSubscribeLabel.text = "\(shortString.shortNumber()) subscribers"
             profileImageView.loadImageUsingUrlString(urlString: profile_url)
+            isSubscribe = false
         }
         
     }
