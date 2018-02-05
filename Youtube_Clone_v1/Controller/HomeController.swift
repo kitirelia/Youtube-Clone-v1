@@ -13,7 +13,8 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
     let cellId = "cellId"
     let trendingCellId = "trendingId"
     let subscriptionCellId = "subscriptionId"
-    let titles = ["Home","Trending","Subscription","Account"]
+    let activityCellId = "activityId"
+    let titles = ["Home","Trending","Subscription","Activity"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +40,7 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
         collectionView?.register(FeedCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.register(TrendingCell.self, forCellWithReuseIdentifier: trendingCellId)
         collectionView?.register(SubscriptionCell.self, forCellWithReuseIdentifier: subscriptionCellId)
+        collectionView?.register(ActivityCell.self, forCellWithReuseIdentifier: activityCellId)
         collectionView?.contentInset = UIEdgeInsetsMake(50, 0, 0, 0)
         collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(50, 0, 0, 0)
         collectionView?.isPagingEnabled = true
@@ -141,12 +143,21 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
             identifier = trendingCellId
         }else if indexPath.item == 2{
             identifier = subscriptionCellId
-        }else{
+        }else if indexPath.item == 3 {
+            identifier = activityCellId
+            print("activity cell")
+        }
+        else{
             identifier = cellId
         }
-       
+        
+        
+        if indexPath.item == 3{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! ActivityCell
+            return cell
+        }
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as? FeedCell{
-        cell.feedCellDelegate = self
+            cell.feedCellDelegate = self
             
             return cell
         }else{

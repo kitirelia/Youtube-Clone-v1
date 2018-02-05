@@ -83,7 +83,7 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
                  let frameY = (keyWindow.frame.height - 10 - 10 - 50 )  // 10 from constraint 50 from thumb height
                 self.videoLauncherView.frame = CGRect(x: 0, y: frameY, width: keyWindow.frame.width, height: keyWindow.frame.height)
             }) { (completed:Bool) in
-                UIApplication.shared.isStatusBarHidden = true
+                UIApplication.shared.isStatusBarHidden = false
             }
         }
     }
@@ -110,10 +110,12 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
                 
                 chanelDetailView.setupUI(video: video)
                 videoDetailView.setupUI(video: video)
+                videoThumb.setupUI(video: video)
+                UIApplication.shared.isStatusBarHidden = true
                 UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                     self.videoLauncherView.frame = CGRect(x: 0, y: 0 - 10 - 10 - 50, width: keyWindow.frame.width, height: keyWindow.frame.height + 10 + 10 + 50)
                 }, completion: { (completedAnimation) in
-                    UIApplication.shared.isStatusBarHidden = true
+                    
                     self.videoPlayerView.setupVideoPlayer(video: video)
                 })
             }

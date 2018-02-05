@@ -142,6 +142,13 @@ class VideoThumbView:UIView {
         super.layoutSublayers(of: layer)
 //        setupGradientLayer()
     }
+    func setupUI(video:Video){
+         if let title = video.title,let channelName = video.channel?.name{
+            titleLbl.text = title
+            subtitleLbl.text = channelName
+        }
+        
+    }
     
     private func setupGradientLayer(){
         let gradientLayer = CAGradientLayer()
