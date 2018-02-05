@@ -146,15 +146,25 @@ class VideoPlayerView: UIView {
     }
     
     @objc func handlePause(){
-        videoDelegate?.playPauseToggle(isPlaying: isPlaying)
+        print("press pause isPlaying \(isPlaying)")
+//        videoDelegate?.playPauseToggle(isPlaying: isPlaying)
         if isPlaying{
             quPlayer?.pause()
-            pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
+            DispatchQueue.main.async {
+                self.pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
+                print("change to -> play")
+            }
+            
         }else{
             quPlayer?.play()
-            pausePlayButton.setImage(UIImage(named:"pause_24"), for: .normal)
+            DispatchQueue.main.async {
+                self.pausePlayButton.setImage(UIImage(named:"pause_24"), for: .normal)
+                print("change to -> pause!!\n")
+            }
+            
+
         }
-        isPlaying = !isPlaying
+//        isPlaying = !isPlaying
     }
     
     @objc func handleShare(){
@@ -208,15 +218,24 @@ class VideoPlayerView: UIView {
     // MARK: - Init
     
     func setupVideoPlayer(video:Video){
-        print("setup video")
-        handlePause()
+        print("setup video \(isPlaying)")
         
-        
-        DispatchQueue.main.async {
-            self.playUrl = video.video_url
-            self.playVideoWithUrl(videoUrl: self.playUrl!)
+        //handlePause()
+        self.playUrl = video.video_url
+        self.playVideoWithUrl(videoUrl: self.playUrl!)
+    }
+    
+    func updatePlayPauseUi(){
+        if isPlaying{
+            DispatchQueue.main.async {
+            
+                self.pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
+            }
+        }else{
+            DispatchQueue.main.async {
+                self.pausePlayButton.setImage(UIImage(named:"pause_24"), for: .normal)
+            }
         }
-        
     }
 
     func setupVideoPlayer(){

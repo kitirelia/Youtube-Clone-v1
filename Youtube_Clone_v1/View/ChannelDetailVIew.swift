@@ -25,7 +25,7 @@ class ChannelDetailView:UIView {
         label.textColor = UIColor.darkGray
         label.text = "jypentertainment"
         label.font = UIFont(name: label.font.fontName, size: 12)
-        label.backgroundColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
+        label.backgroundColor = UIColor.white
         return label
     }()
     
@@ -34,13 +34,13 @@ class ChannelDetailView:UIView {
         label.textColor = UIColor.lightGray
         label.text = "6M"
         label.font = UIFont(name: label.font.fontName, size: 12)
-        label.backgroundColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
+        label.backgroundColor = UIColor.white
         return label
     }()
     
     var labelView:UIView = {
        let view = UIView()
-        view.backgroundColor = UIColor.brown
+        view.backgroundColor = UIColor.white
         return view
     }()
     
@@ -56,7 +56,7 @@ class ChannelDetailView:UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+        self.backgroundColor = UIColor.white
         self.addSubview(profileImageView)
         
         labelView.addSubview(channelNameLabel)
@@ -79,6 +79,22 @@ class ChannelDetailView:UIView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSublayers(of layer: CALayer) {
+        super.layoutSublayers(of: layer)
+        let topBorder = CALayer()
+        
+        topBorder.frame = CGRect(x: 0, y: 0, width: bounds.size.width, height: 1)
+        
+        topBorder.backgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
+        self.layer.addSublayer(topBorder)
+        
+        let bottomBorder = CALayer()
+        
+        bottomBorder.frame = CGRect(x: 0, y: bounds.size.height, width: bounds.size.width, height: 1)
+        bottomBorder.backgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1) 
+        self.layer.addSublayer(bottomBorder)
     }
     
     func setupUI(video:Video){

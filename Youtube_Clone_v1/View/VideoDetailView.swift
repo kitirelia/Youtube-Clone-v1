@@ -13,25 +13,24 @@ class VideoDetailView:UIView{
     
     lazy var titleLabel:UILabel = {
        let label = UILabel()
-//        label.text = "TWICE Like OOH-AHH (OOH-AHH하게) M/V"
-        label.textColor = UIColor.darkGray
+        label.textColor = #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1)
         label.numberOfLines = 1
-        label.backgroundColor = UIColor.red
-        label.font = UIFont(name: label.font.fontName, size: 14)
+        label.backgroundColor = UIColor.white
+        label.font = UIFont(name: label.font.fontName, size: 15)
         return label
     }()
     
     lazy var numberOfViewsLabel:UILabel = {
         let label = UILabel()
         label.text = "2M views"
-        label.font = UIFont(name: label.font.fontName, size: 12)
-        label.textColor = UIColor.darkGray
+        label.font = UIFont(name: label.font.fontName, size: 11)
+        label.textColor = UIColor.lightGray
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        self.backgroundColor = UIColor.white
         
         self.addSubview(titleLabel)
         self.addSubview(numberOfViewsLabel)
@@ -40,7 +39,11 @@ class VideoDetailView:UIView{
         self.addConstraintsWithFormat(format: "H:|-8-[v0]-8-|", views: titleLabel)
         self.addConstraintsWithFormat(format: "H:|-8-[v0]-8-|", views: numberOfViewsLabel)
         
+        
+        
+        
     }
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -52,7 +55,7 @@ class VideoDetailView:UIView{
             let numberFormatter = NumberFormatter()
             numberFormatter.numberStyle = .decimal
             let num_of_view = numberFormatter.string(from: numOfView)
-            numberOfViewsLabel.text = "\(num_of_view!) views"
+            numberOfViewsLabel.text = " \(num_of_view!) views"
             titleLabel.text = title
         }
     }
