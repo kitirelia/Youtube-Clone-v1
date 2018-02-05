@@ -40,6 +40,45 @@ extension UIView{
     }
 }
 
+extension String{
+    func shortNumber() -> String{
+        let length = self.count
+        let digits = self
+        switch length {
+        case 4:// 5,400 -> 5.4k
+            let index4 = digits.index(digits.startIndex, offsetBy: 2)
+            var char = digits.prefix(upTo: index4)
+            let afterCut = Int(char)
+            guard let intVal = afterCut else {return "xxx"}
+            
+            if intVal % 10 != 0{
+                char.insert(".", at: char.index(after: char.startIndex))
+            }else{
+                char = digits.prefix(upTo: digits.index(digits.startIndex, offsetBy: 1))
+            }
+            return "\(char)k"
+        case 5://43,000 -> 43k
+            let index4 = digits.index(digits.startIndex, offsetBy: 2)
+            return "\(digits.prefix(upTo: index4))k"
+        case 6: //100,000 -> 100k
+            let index4 = digits.index(digits.startIndex, offsetBy: 3)
+            return "\(digits.prefix(upTo: index4))k"
+        case 7...9:
+            let cutAt = length - 6
+            let index4 = digits.index(digits.startIndex, offsetBy: cutAt)
+            return "\(digits.prefix(upTo: index4))M"
+            
+        case let x where x > 9:
+            let cutAt = length - 9
+            let index4 = digits.index(digits.startIndex, offsetBy: cutAt)
+            return "\(digits.prefix(upTo: index4))B"
+
+        default:
+            return self
+        }
+    }
+}
+
 let imageCache = NSCache<AnyObject, AnyObject>()
 
 class CustomImageView: UIImageView {

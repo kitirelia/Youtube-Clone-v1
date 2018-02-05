@@ -26,6 +26,46 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
         setupCollectionView()
         setupMenuBar()
         setupNavBarButtons()
+        
+        
+        
+        //-----------  test
+        let single = "4"
+        let two_digit = "12"
+        let hundred = "123"
+        let thousand = "3000"
+        let thousand2 = "5430"
+        
+        let ten_thounsand = "62703"
+        let hundred_thounsand = "324588"
+        let one_million = "5037400"
+        let ten_million = "12345970"
+        let hundred_million = "312345970"
+        
+        let single_billion = "3080253319"
+        let hundred_billion = "34786046171"
+        
+        print("-------------")
+        print("\(single) is \(single.shortNumber()) view")
+        print("\(two_digit) is \(two_digit.shortNumber()) view")
+        print("\(hundred) is \(hundred.shortNumber()) view")
+        print("\(thousand) is \(thousand.shortNumber()) view")
+        print("\(thousand2) is \(thousand2.shortNumber()) view")
+        print("    ---   ")
+        print("\(ten_thounsand) is \(ten_thounsand.shortNumber()) view")
+        print("\(hundred_thounsand) is \(hundred_thounsand.shortNumber()) view")
+        
+        print(" ----  1M ---")
+        print("\(one_million) is \(one_million.shortNumber()) view")
+        print("\(ten_million) is \(ten_million.shortNumber()) view")
+        print("\(hundred_million) is \(hundred_million.shortNumber()) view")
+        print("----- Billion")
+        print("\(single_billion) is \(single_billion.shortNumber()) view")
+        print("\(hundred_billion) is \(hundred_billion.shortNumber()) view")
+        
+        print("---------\n")
+        
+        
     }
     
     func setupCollectionView(){
