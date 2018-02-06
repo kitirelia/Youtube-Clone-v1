@@ -19,7 +19,7 @@ class ReactionView: UIView {
         button.imageView?.contentMode = .scaleAspectFit
         button.backgroundColor = UIColor.white
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = UIColor.darkGray
+        button.tintColor = UIColor.rgb(red: 102, green: 102, blue: 102)
         button.addTarget(self, action: #selector(handleLikeDisLike), for: .touchUpInside)
 //        button.backgroundColor = UIColor.brown
         return button
@@ -27,15 +27,12 @@ class ReactionView: UIView {
     
     lazy var disLikeButton:UIButton = {
         let button = UIButton(type: UIButtonType.system)
-        let image = UIImage(named: "dis-like-icon")?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage(named: "dis-like-icon")
         button.setImage(image, for: .normal)
-        
-        button.imageView?.tintColor = UIColor.rgb(red: 91, green: 14, blue: 13)
-        
         button.imageView?.contentMode = .scaleAspectFit
         button.backgroundColor = UIColor.white
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = UIColor.darkGray
+        button.tintColor = UIColor.rgb(red: 102, green: 102, blue: 102)
         button.addTarget(self, action: #selector(handleLikeDisLike), for: .touchUpInside)
 //        button.backgroundColor = UIColor.cyan
         return button
@@ -48,7 +45,7 @@ class ReactionView: UIView {
         button.imageView?.contentMode = .scaleAspectFit
         button.backgroundColor = UIColor.white
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = UIColor.darkGray
+        button.tintColor = UIColor.rgb(red: 102, green: 102, blue: 102)
         button.addTarget(self, action: #selector(handleShare), for: .touchUpInside)
 //        button.backgroundColor = UIColor.green
         return button
@@ -61,7 +58,7 @@ class ReactionView: UIView {
         button.imageView?.contentMode = .scaleAspectFit
         button.backgroundColor = UIColor.white
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = UIColor.darkGray
+        button.tintColor = UIColor.rgb(red: 102, green: 102, blue: 102)
         button.addTarget(self, action: #selector(handleDownload), for: .touchUpInside)
 //        button.backgroundColor = UIColor.red
         return button
@@ -74,7 +71,7 @@ class ReactionView: UIView {
         button.imageView?.contentMode = .scaleAspectFit
         button.backgroundColor = UIColor.white
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = UIColor.darkGray
+        button.tintColor = UIColor.rgb(red: 102, green: 102, blue: 102)
         button.addTarget(self, action: #selector(handleAddTo), for: .touchUpInside)
 //        button.backgroundColor = UIColor.rgb(red: 80, green: 133, blue: 237)
         return button
@@ -125,6 +122,9 @@ class ReactionView: UIView {
         return label
     }()
     
+    var isLike = false
+    var isDisLike = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.white
@@ -133,6 +133,9 @@ class ReactionView: UIView {
         self.addSubview(sharedButton)
         self.addSubview(downloadButton)
         self.addSubview(addToButton)
+        
+        likeButton.tag = 2
+        disLikeButton.tag = 3
         
         self.addSubview(numOfLikeLbl)
         self.addSubview(numOfDisLikeLbl)
@@ -181,8 +184,45 @@ class ReactionView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func handleLikeDisLike(){
+    @objc func handleLikeDisLike(sender:UIButton){
         
+        switch sender.tag
+        {
+        case 2: print("1")     //Like
+            isLike = !isLike
+            toggleButtonTint(button: likeButton, bool: isLike)
+            if isDisLike{
+                isDisLike = false
+                toggleButtonTint(button: disLikeButton, bool: isDisLike)
+            }
+            break
+        case 3: print("2")     //DisLike.
+            isDisLike = !isDisLike
+            toggleButtonTint(button: disLikeButton, bool: isDisLike)
+            if isLike{
+                isLike = false
+                toggleButtonTint(button: likeButton, bool: isLike)
+            }
+        
+            break
+       
+        default: print("Other...")
+        }
+    }
+    
+    func setLikeDisLikeReadyState(){
+        isLike = false
+        isDisLike = false
+        toggleButtonTint(button: likeButton, bool: isLike)
+        toggleButtonTint(button: disLikeButton, bool: isDisLike)
+    }
+    
+    func toggleButtonTint(button:UIButton,bool:Bool){
+        if bool{
+            button.tintColor = UIColor.rgb(red: 80, green: 133, blue: 237)
+        }else{
+            button.tintColor = UIColor.rgb(red: 102, green: 102, blue: 102)
+        }
     }
     
     @objc func handleShare(){

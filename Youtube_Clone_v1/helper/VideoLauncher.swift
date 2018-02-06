@@ -96,6 +96,7 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
     
     func playNewVideo(video:Video){
         if video.video_url != nil{
+            reactionView.setLikeDisLikeReadyState()
             self.maxiMizeVideoPlayer(video: video)
         }
     }
