@@ -145,26 +145,18 @@ class VideoPlayerView: UIView {
         }
     }
     
-    @objc func handlePause(){
-        print("press pause isPlaying \(isPlaying)")
-//        videoDelegate?.playPauseToggle(isPlaying: isPlaying)
+    @objc func handlePause(){      
+        videoDelegate?.playPauseToggle(isPlaying: isPlaying)
         if isPlaying{
             quPlayer?.pause()
-            DispatchQueue.main.async {
-                self.pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
-                print("change to -> play")
-            }
-            
+            self.pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
+
         }else{
             quPlayer?.play()
-            DispatchQueue.main.async {
-                self.pausePlayButton.setImage(UIImage(named:"pause_24"), for: .normal)
-                print("change to -> pause!!\n")
-            }
-            
-
+            self.pausePlayButton.setImage(UIImage(named:"pause_24"), for: .normal)
         }
-//        isPlaying = !isPlaying
+        isPlaying = !isPlaying
+         print("toggle \(isPlaying)")
     }
     
     @objc func handleShare(){
@@ -218,7 +210,7 @@ class VideoPlayerView: UIView {
     // MARK: - Init
     
     func setupVideoPlayer(video:Video){
-        print("setup video \(isPlaying)")
+//        print("setup video \(isPlaying)")
         
         //handlePause()
         self.playUrl = video.video_url
@@ -249,7 +241,7 @@ class VideoPlayerView: UIView {
         quPlayer?.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.new, context: nil)
         
         quPlayer?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
-        let interval = CMTime(seconds: 1/3,
+        let interval = CMTime(seconds: 1,
                               preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         quPlayer?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (progressTime) in
             let seconds = CMTimeGetSeconds(progressTime)

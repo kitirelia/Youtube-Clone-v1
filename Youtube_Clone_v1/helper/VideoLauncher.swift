@@ -17,6 +17,7 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
     var whiteViewBG:UIView = UIView()
     let videoDetailView = VideoDetailView()
     let chanelDetailView = ChannelDetailView()
+    let reactionView = ReactionView()
     
     override init(){
         super.init()
@@ -41,6 +42,8 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
             videoThumb.translatesAutoresizingMaskIntoConstraints = false
             videoThumb.videoThumbDelegate = self
         
+        
+            videoLauncherView.addSubview(reactionView)
             videoLauncherView.addSubview(videoThumb)
         
             videoLauncherView.addConstraintsWithFormat(format: "V:|-70-[v0(\(height))]", views: videoPlayerView)
@@ -50,6 +53,7 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
         
             videoLauncherView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: whiteViewBG)
         
+            videoLauncherView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: reactionView)
             videoLauncherView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: videoThumb)
 
             videoLauncherView.addConstraintsWithFormat(format: "V:|-0-[v1]-0-[v0]", views: videoPlayerView,videoThumb)
@@ -60,7 +64,7 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
         
             videoLauncherView.addSubview(chanelDetailView)
             videoLauncherView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: chanelDetailView)
-            videoLauncherView.addConstraintsWithFormat(format: "V:[v0]-10-[v1(40)]", views: videoDetailView,chanelDetailView)
+            videoLauncherView.addConstraintsWithFormat(format: "V:[v0]-10-[v1(40)]-5-[v2(40)]", views: videoDetailView,reactionView,chanelDetailView)
         
             keyWindow.addSubview(videoLauncherView)
         }
@@ -79,46 +83,36 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
     
     func minimizeView(){
         if let keyWindow = UIApplication.shared.keyWindow{
+            UIApplication.shared.isStatusBarHidden = false
             UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                  let frameY = (keyWindow.frame.height - 10 - 10 - 50 )  // 10 from constraint 50 from thumb height
                 self.videoLauncherView.frame = CGRect(x: 0, y: frameY, width: keyWindow.frame.width, height: keyWindow.frame.height)
             }) { (completed:Bool) in
-                UIApplication.shared.isStatusBarHidden = false
+                
             }
         }
     }
     
-//    func showVideoPlayer(video:Video){
-//        if let keyWindow = UIApplication.shared.keyWindow{
-//            if let videoUrl = video.video_url{
-//                videoPlayerView.playUrl = videoUrl
-//                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-//                    self.videoLauncherView.frame = CGRect(x: 0, y: 0 - 10 - 10 - 50, width: keyWindow.frame.width, height: keyWindow.frame.height + 10 + 10 + 50)
-//                }, completion: { (completedAnimation) in
-//                    self.videoPlayerView.playVideoWithUrl(videoUrl: videoUrl)
-//                    UIApplication.shared.isStatusBarHidden = true
-//                    self.videoPlayerView.layoutIfNeeded()
-//
-//                })
-//            }
-//        }
-//    }
     
     func playNewVideo(video:Video){
+        if video.video_url != nil{
+            self.maxiMizeVideoPlayer(video: video)
+        }
+    }
+    
+    func maxiMizeVideoPlayer(video:Video?){
         if let keyWindow = UIApplication.shared.keyWindow{
-            if video.video_url != nil{
-                
-                chanelDetailView.setupUI(video: video)
-                videoDetailView.setupUI(video: video)
-                videoThumb.setupUI(video: video)
-                UIApplication.shared.isStatusBarHidden = true
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                    self.videoLauncherView.frame = CGRect(x: 0, y: 0 - 10 - 10 - 50, width: keyWindow.frame.width, height: keyWindow.frame.height + 10 + 10 + 50)
-                }, completion: { (completedAnimation) in
-                    
+            UIApplication.shared.isStatusBarHidden = true
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                self.videoLauncherView.frame = CGRect(x: 0, y: 0 - 10 - 10 - 50, width: keyWindow.frame.width, height: keyWindow.frame.height + 10 + 10 + 50)
+            }, completion: { (completedAnimation) in
+                if let video = video{
                     self.videoPlayerView.setupVideoPlayer(video: video)
-                })
-            }
+                    self.chanelDetailView.setupUI(video: video)
+                    self.videoDetailView.setupUI(video: video)
+                    self.videoThumb.setupUI(video: video)
+                }
+            })
         }
     }
     
@@ -126,14 +120,7 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
     //------ delegate thumbvideo
     
     func maximizeButtonTapped() {
-//        if let keyWindow = UIApplication.shared.keyWindow{
-//
-//            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-//                self.videoLauncherView.frame = CGRect(x: 0, y: 0 - 10 - 10 - 50, width: keyWindow.frame.width, height: keyWindow.frame.height + 10 + 10 + 50)
-//            }, completion: { (completedAnimation) in
-//                UIApplication.shared.isStatusBarHidden = false
-//            })
-//        }
+        maxiMizeVideoPlayer(video: nil)
     }
     
     func minimizeButtonDidTapped() {

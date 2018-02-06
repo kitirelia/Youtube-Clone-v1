@@ -80,9 +80,6 @@ class VideoThumbView:UIView {
         
         let ratio = (frame.width / 5)
         
-        titleLbl.text = "TWICE Like OOH-AHH(OOH-AHH하게) M/V"
-        subtitleLbl.text = "videoThumb"
-        
         titleView.addSubview(titleLbl)
         titleLbl.addSubview(subtitleLbl)
         
@@ -115,12 +112,10 @@ class VideoThumbView:UIView {
     }
     
     @objc func handlePause(){
-//        print("pause ")
         videoThumbDelegate?.pauseButtonTapped()
     }
     
     @objc func handleImageViewTap(){
-        //print("maximize")
         videoThumbDelegate?.maximizeButtonTapped()
     }
     
@@ -130,24 +125,18 @@ class VideoThumbView:UIView {
     
     func setPlayPauseState(isPlaying:Bool){
         if isPlaying{
-           
             pausePlayButton.setImage(UIImage(named:"play_24"), for: .normal)
         }else{
             
             pausePlayButton.setImage(UIImage(named:"pause_24"), for: .normal)
         }
     }
-    
-    override func layoutSublayers(of layer: CALayer) {
-        super.layoutSublayers(of: layer)
-//        setupGradientLayer()
-    }
+
     func setupUI(video:Video){
          if let title = video.title,let channelName = video.channel?.name{
             titleLbl.text = title
             subtitleLbl.text = channelName
         }
-        
     }
     
     private func setupGradientLayer(){
@@ -155,7 +144,6 @@ class VideoThumbView:UIView {
         gradientLayer.frame = bounds
         gradientLayer.colors = [UIColor.clear.cgColor,UIColor.black.cgColor]
         gradientLayer.locations = [0.0,0.8]
-        
         self.layer.addSublayer(gradientLayer)
     }
     

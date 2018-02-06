@@ -29,6 +29,7 @@
 		64999FB7202455A100F88E64 /* VideoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64999FB6202455A100F88E64 /* VideoDetailView.swift */; };
 		64999FB920245AAD00F88E64 /* ChannelDetailVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64999FB820245AAD00F88E64 /* ChannelDetailVIew.swift */; };
 		64BFA31D20288B44001A201D /* ActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BFA31C20288B44001A201D /* ActivityCell.swift */; };
+		64BFA31F20296911001A201D /* ReactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BFA31E20296911001A201D /* ReactionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +57,7 @@
 		64999FB6202455A100F88E64 /* VideoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDetailView.swift; sourceTree = "<group>"; };
 		64999FB820245AAD00F88E64 /* ChannelDetailVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelDetailVIew.swift; sourceTree = "<group>"; };
 		64BFA31C20288B44001A201D /* ActivityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCell.swift; sourceTree = "<group>"; };
+		64BFA31E20296911001A201D /* ReactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +144,7 @@
 				64999FB6202455A100F88E64 /* VideoDetailView.swift */,
 				64999FB820245AAD00F88E64 /* ChannelDetailVIew.swift */,
 				64BFA31C20288B44001A201D /* ActivityCell.swift */,
+				64BFA31E20296911001A201D /* ReactionView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -236,6 +239,7 @@
 				6413B5E520109F6900841524 /* Video.swift in Sources */,
 				64999FB920245AAD00F88E64 /* ChannelDetailVIew.swift in Sources */,
 				64999FB7202455A100F88E64 /* VideoDetailView.swift in Sources */,
+				64BFA31F20296911001A201D /* ReactionView.swift in Sources */,
 				641BF93720219BAF005AF2B9 /* VideoThumbView.swift in Sources */,
 				64BFA31D20288B44001A201D /* ActivityCell.swift in Sources */,
 				6484706E20105B7D0003857B /* VideoCell.swift in Sources */,

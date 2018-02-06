@@ -59,13 +59,8 @@ class ActivityCell: UICollectionViewCell {
         self.contentView.addConstraint(NSLayoutConstraint(item: self.contentView, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: bellImageView, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0))
         
         self.contentView.addConstraint(NSLayoutConstraint(item: self.contentView, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: titleLbl, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0))
-        
         self.contentView.addConstraintsWithFormat(format: "H:|-40-[v0]-40-|", views: subtitleLbl)
-        
         self.contentView.addConstraintsWithFormat(format: "H:|-50-[v0]-50-|", views: turnOnNotiButton)
-//        self.contentView.addConstraint(NSLayoutConstraint(item: self.contentView, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: subtitleLbl, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0))
-        
-//        self.contentView.addConstraint(NSLayoutConstraint(item: self.contentView, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: turnOnNotiButton, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0))
     }
     
     required init?(coder aDecoder: NSCoder) {
