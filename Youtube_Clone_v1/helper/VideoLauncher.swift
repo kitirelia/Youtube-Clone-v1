@@ -64,7 +64,7 @@ class VideoLauncher:NSObject,VideoPlayerViewDelegate,VideoThumbViewDelegate{
         
             videoLauncherView.addSubview(chanelDetailView)
             videoLauncherView.addConstraintsWithFormat(format: "H:|-0-[v0]-0-|", views: chanelDetailView)
-            videoLauncherView.addConstraintsWithFormat(format: "V:[v0]-10-[v1(40)]-5-[v2(40)]", views: videoDetailView,reactionView,chanelDetailView)
+            videoLauncherView.addConstraintsWithFormat(format: "V:[v0]-10-[v1(50)]-10-[v2(40)]", views: videoDetailView,reactionView,chanelDetailView)
         
             keyWindow.addSubview(videoLauncherView)
         }
