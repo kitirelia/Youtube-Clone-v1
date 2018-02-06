@@ -27,8 +27,11 @@ class ReactionView: UIView {
     
     lazy var disLikeButton:UIButton = {
         let button = UIButton(type: UIButtonType.system)
-        let image = UIImage(named: "dis-like-icon")
+        let image = UIImage(named: "dis-like-icon")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
+        
+        button.imageView?.tintColor = UIColor.rgb(red: 91, green: 14, blue: 13)
+        
         button.imageView?.contentMode = .scaleAspectFit
         button.backgroundColor = UIColor.white
         button.translatesAutoresizingMaskIntoConstraints = false
